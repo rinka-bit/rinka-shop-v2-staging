@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>☁️ Rinka Shop</title>
+
+<script>
+(function(){
+  try{
+    const m=localStorage.getItem("rinka_theme_mode")||"system";
+    const d=m==="dark"||(m==="system"&&window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.dataset.themeMode=m;
+    document.documentElement.dataset.theme=d?"dark":"light";
+  }catch(_){}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="browse.css">
+<link rel="stylesheet" href="home.css">
+
+<link
+rel="stylesheet"
+href="cart-drawer.css">
+
+<link rel="stylesheet" href="theme.css?v=20260918-2">
+<link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
+</head>
+
+<body>
+<header class="page-header">
+  <button id="menuButton" class="icon-btn" type="button" aria-label="เปิดเมนู">☰</button>
+  <h1>Rinka Shop</h1>
+
+  <button
+type="button"
+class="cart-btn"
+onclick="openCartDrawer()"
+aria-label="เปิดตะกร้า">
+
+  🛒
+
+  <span
+  id="cartCount"
+  aria-live="polite">
+    0
+  </span>
+
+</button>
+  
+</header>
+
+<div id="overlay" class="overlay hidden"></div>
+
+<aside id="sideMenu" class="side-menu" aria-label="เมนูหลัก">
+  <div class="menu-header"><h2>Rinka Shop</h2></div>
+  <a href="home.html">🏠 หน้าแรก</a>
+  <a href="browse.html">🛍️ สินค้าทั้งหมด</a>
+  <a href="categories.html">📦 หมวดสินค้า</a>
+  <a href="lookup.html">📄 เช็กออเดอร์</a>
+  <a href="help.html">🛟 ศูนย์ช่วยเหลือ</a>
+  <a href="change-address.html">📍 เปลี่ยนที่อยู่</a>
+  <a href="account.html">👤 บัญชีของฉัน</a>
+  <a href="cart.html">🛒 ตะกร้า</a>
+  <a href="https://x.com/prewithrinka" target="_blank" rel="noopener noreferrer">📞 ติดต่อร้าน</a>
+</aside>
+
+<div id="homePageMessage" class="home-page-message hidden" role="status"></div>
+
+<div class="hero-banner">
+  <div class="hero-content">
+    <h1>☁️ Welcome to Rinka Shop</h1>
+    <p>Pre-order Game Merchandise หลายแฟนด้อม ไม่ว่าจะเป็น
+       Genshin Impact, Honkai Star Rail, Wuthering Waves, Love and Deepspace, Light and Night และอื่น ๆ</p>
+    <button type="button" onclick="window.location.href='browse.html'">🔍 ค้นหาสินค้า</button>
+  </div>
+</div>
+
+<div id="fandomSection" class="section">
+  <div class="section-heading">
+    <h2>🎮 Fandom</h2>
+    <a class="section-link" href="browse.html">ดูทั้งหมด →</a>
+  </div>
+  <div id="fandomList" class="fandom-list"></div>
+</div>
+
+<div id="collectionSection" class="section">
+  <div class="section-heading">
+    <h2>🔥 รอบพรีออเดอร์</h2>
+    <a class="section-link" href="browse.html?type=preorder">ดูทั้งหมด →</a>
+  </div>
+  <div id="collectionCards" class="product-grid-home"></div>
+</div>
+
+<div id="featuredSection" class="section">
+  <div class="section-heading">
+    <h2>⏰ พรีออเดอร์จำกัดเวลา</h2>
+    <a class="section-link" href="browse.html?type=preorder">ดูทั้งหมด →</a>
+  </div>
+  <div id="featuredProducts" class="product-grid-home"></div>
+</div>
+
+<div id="newSection" class="section">
+  <div class="section-heading">
+    <h2>⭐ สินค้าใหม่ล่าสุด</h2>
+    <a class="section-link" href="browse.html?type=new">ดูทั้งหมด →</a>
+  </div>
+  <div id="newProducts" class="product-grid-home"></div>
+</div>
+
+<script src="catalog.js?v=20260819-1"></script>
+<script>
+const BASE_API =
+  "https://script.google.com/macros/s/AKfycbwpwT5sgetNYhEtGz9NMaaYcedgEgU_32udT0TjTIyKn99ZqmZFYggvGCBXiva-KeVx6Q/exec";
+
+function homeEscape(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function homeBool(value){
+  return value === true ||
+    value === 1 ||
+    ["true","yes","1","active"].includes(
+      String(value || "").trim().toLowerCase()
+    );
+}
+
+function setHomeMessage(message,type){
+  const box = document.getElementById("homePageMessage");
+  if(!box) return;
+  box.textContent = message || "";
+  box.classList.toggle("hidden",!message);
+  box.style.background = type === "error" ? "#fef2f2" : "#eff6ff";
+  box.style.borderColor = type === "error" ? "#fecaca" : "#bfdbfe";
+  box.style.color = type === "error" ? "#991b1b" : "#1e40af";
+}
+
+function stateHtml(icon,title,detail,buttonHtml=""){
+  return `
+    <div class="home-state">
+      <div class="home-state-icon">${icon}</div>
+      <strong>${homeEscape(title)}</strong>
+      ${detail ? `<div>${homeEscape(detail)}</div>` : ""}
+      ${buttonHtml}
+    </div>
+  `;
+}
+
+function showLoadingSkeleton(containerId,count=4){
+  const box = document.getElementById(containerId);
+  if(!box) return;
+  box.innerHTML = Array.from({length:count},()=>'<div class="home-skeleton" aria-hidden="true"></div>').join("");
+}
+
+/*
+=========================================
+HOME DATA CACHE
+=========================================
+*/
+
+const HOME_CACHE_KEY =
+  "rinka_home_data_v1";
+
+
+const HOME_CACHE_MAX_AGE =
+  10 * 60 * 1000;
+
+
+/*
+=========================================
+READ CACHE
+=========================================
+*/
+
+function getHomeCache(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        HOME_CACHE_KEY
+      );
+
+    if(!raw){
+
+      return null;
+
+    }
+
+
+    const parsed =
+      JSON.parse(
+        raw
+      );
+
+
+    if(
+      !parsed ||
+      typeof parsed !==
+        "object"
+    ){
+
+      return null;
+
+    }
+
+
+    if(
+      !Array.isArray(
+        parsed.products
+      ) ||
+      !Array.isArray(
+        parsed.collections
+      )
+    ){
+
+      return null;
+
+    }
+
+
+    return parsed;
+
+
+  }catch(error){
+
+    console.warn(
+      "อ่าน Home cache ไม่สำเร็จ:",
+      error
+    );
+
+    return null;
+
+  }
+
+}
+
+
+/*
+=========================================
+SAVE CACHE
+=========================================
+*/
+
+function saveHomeCache(
+  data
+){
+
+  try{
+
+    localStorage.setItem(
+      HOME_CACHE_KEY,
+      JSON.stringify({
+
+        saved_at:
+          Date.now(),
+
+        products:
+          Array.isArray(
+            data.products
+          )
+            ? data.products
+            : [],
+
+        collections:
+          Array.isArray(
+            data.collections
+          )
+            ? data.collections
+            : []
+
+      })
+    );
+
+
+  }catch(error){
+
+    /*
+    cache เต็ม / browser ปิด storage
+    ไม่ควรทำให้หน้าเว็บพัง
+    */
+
+    console.warn(
+      "บันทึก Home cache ไม่สำเร็จ:",
+      error
+    );
+
+  }
+
+}
+
+
+/*
+=========================================
+RENDER HOME DATA
+=========================================
+*/
+
+function renderHomeData(
+  data
+){
+
+  const products =
+    Array.isArray(
+      data?.products
+    )
+      ? [
+          ...data.products
+        ]
+      : [];
+
+
+  const collections =
+    Array.isArray(
+      data?.collections
+    )
+      ? data.collections
+      : [];
+
+
+  /*
+  =========================================
+  PRODUCTS
+  =========================================
+  */
+
+  window.allProducts =
+    [
+      ...products
+    ];
+
+
+  products.sort(
+    (
+      a,
+      b
+    ) =>
+
+      Number(
+        b.sort_order || 0
+      )
+      -
+      Number(
+        a.sort_order || 0
+      )
+  );
+
+
+  loadFeatured(
+    products
+  );
+
+
+  loadNewArrivals(
+    products
+  );
+
+
+  loadFandoms(
+    products
+  );
+
+
+  /*
+  =========================================
+  COLLECTIONS
+  =========================================
+  */
+
+  renderHomeCollections(
+    collections
+  );
+
+}
+
+/*
+=========================================
+LOAD HOME
+=========================================
+*/
+
+async function loadHome(){
+
+  const cached =
+    window.RinkaCatalog
+      ?.getCached?.();
+
+
+  /*
+  =========================================
+  CACHE FIRST
+  =========================================
+  */
+
+  if(cached){
+
+    renderHomeData(
+      cached
+    );
+
+    setHomeMessage(
+      "",
+      "info"
+    );
+
+  }else{
+
+    showLoadingSkeleton(
+      "featuredProducts"
+    );
+
+    showLoadingSkeleton(
+      "newProducts"
+    );
+
+    showLoadingSkeleton(
+      "collectionCards"
+    );
+
+    document
+      .getElementById(
+        "fandomList"
+      )
+      .innerHTML =
+        stateHtml(
+          "⏳",
+          "กำลังโหลดแฟนด้อม",
+          ""
+        );
+
+  }
+
+
+  /*
+  =========================================
+  STATIC GITHUB CATALOG
+  =========================================
+  */
+
+  try{
+
+    const data =
+      await RinkaCatalog.load();
+
+
+    renderHomeData(
+      data
+    );
+
+
+    setHomeMessage(
+      "",
+      "info"
+    );
+
+
+    console.log(
+      "HOME CATALOG SOURCE:",
+      data.source
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "loadHome error:",
+      error
+    );
+
+
+    if(cached){
+
+      /*
+      cache ยังแสดงได้อยู่
+      ไม่ทำลาย UI
+      */
+
+      return;
+
+    }
+
+
+    const retry = `
+
+<button
+type="button"
+onclick="loadHome()"
+>
+ลองโหลดใหม่
+</button>
+
+`;
+
+
+    [
+      "featuredProducts",
+      "newProducts",
+      "collectionCards"
+    ].forEach(
+      id => {
+
+        const box =
+          document.getElementById(
+            id
+          );
+
+        if(box){
+
+          box.innerHTML =
+            stateHtml(
+              "⚠️",
+              "โหลดข้อมูลไม่สำเร็จ",
+              error.message || "",
+              retry
+            );
+
+        }
+
+      }
+    );
+
+
+    document
+      .getElementById(
+        "fandomList"
+      )
+      .innerHTML =
+        stateHtml(
+          "⚠️",
+          "โหลดข้อมูลไม่สำเร็จ",
+          error.message || "",
+          retry
+        );
+
+
+    setHomeMessage(
+      "โหลดข้อมูลหน้าแรกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+      "error"
+    );
+
+  }
+
+}
+
+function renderHomeCollections(
+  result
+){
+
+  const collections =
+    Array.isArray(
+      result
+    )
+      ? result
+
+      : Array.isArray(
+          result.collections
+        )
+        ? result.collections
+        : [];
+
+
+  const activeCollections =
+    collections.filter(
+      collection => {
+
+        if(
+          collection.active ===
+            undefined &&
+          collection.status ===
+            undefined
+        ){
+
+          return true;
+
+        }
+
+
+        return (
+          homeBool(
+            collection.active
+          )
+          ||
+          [
+            "active",
+            "open",
+            "เปิด"
+          ].includes(
+            String(
+              collection.status || ""
+            )
+              .trim()
+              .toLowerCase()
+          )
+        );
+
+      }
+    );
+
+
+  const box =
+    document.getElementById(
+      "collectionCards"
+    );
+
+
+  if(
+    !activeCollections.length
+  ){
+
+    box.innerHTML =
+      stateHtml(
+        "📦",
+        "ยังไม่มีรอบพรีออเดอร์ที่เปิดอยู่",
+        "กลับมาเช็กอีกครั้งเร็ว ๆ นี้"
+      );
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    activeCollections
+      .map(
+        collection => {
+
+          const deadlineText =
+            getDeadlineText(
+              collection.preorder_deadline
+            );
+
+
+          const id =
+            encodeURIComponent(
+              String(
+                collection.collection_id ||
+                ""
+              )
+            );
+
+
+          const url =
+            `collection.html?id=${id}`;
+
+
+          return `
+
+<div
+class="collection-card"
+role="link"
+tabindex="0"
+onclick="window.location.href='${url}'"
+onkeydown="
+if(
+  event.key==='Enter' ||
+  event.key===' '
+){
+  event.preventDefault();
+  window.location.href='${url}';
+}
+"
+>
+
+<img
+src="${homeEscape(
+  collection.image ||
+  collection.banner_image ||
+  ""
+)}"
+loading="lazy"
+alt="${homeEscape(
+  collection.name ||
+  "รอบพรีออเดอร์"
+)}"
+>
+
+<div class="collection-content">
+
+<div class="collection-badge-preorder">
+PREORDER
+</div>
+
+<h3>
+${homeEscape(
+  collection.name || ""
+)}
+</h3>
+
+<p>
+${homeEscape(
+  collection.fandom || ""
+)}
+</p>
+
+${
+  collection.description
+    ? `
+<p class="collection-description">
+${homeEscape(
+  collection.description
+)}
+</p>
+`
+    : ""
+}
+
+<p class="collection-count">
+${Number(
+  collection.product_count || 0
+).toLocaleString("th-TH")}
+รายการ
+</p>
+
+${
+  deadlineText
+    ? `
+<div class="deadline-badge">
+${homeEscape(
+  deadlineText
+)}
+</div>
+`
+    : ""
+}
+
+</div>
+
+</div>
+
+`;
+
+        }
+      )
+      .join("");
+
+}
+
+function getDeadlineText(deadline){
+  if(!deadline || deadline === "N/A") return "";
+
+  const end = new Date(deadline);
+  if(Number.isNaN(end.getTime())) return "";
+
+  const now = new Date();
+  const endOfToday = new Date(now.getFullYear(),now.getMonth(),now.getDate(),23,59,59,999);
+  const diffDays = Math.ceil((end - endOfToday) / 86400000);
+
+  if(diffDays < 0) return "ปิดรับแล้ว";
+  if(diffDays === 0) return "🔥 ปิดรับวันนี้";
+  if(diffDays === 1) return "⏰ เหลือ 1 วัน";
+  return `⏰ เหลือ ${diffDays} วัน`;
+}
+
+function createProductCard(product){
+  const price = Number(product.final_price ?? product.price ?? 0);
+  const oldPrice = Number(product.old_price ?? product.price ?? 0);
+  const priceMode =
+  String(
+    product.price_mode ||
+    "fixed"
+  );
+
+
+const minPrice =
+  Number(
+    product.min_price ??
+    price
+  );
+
+
+const maxPrice =
+  Number(
+    product.max_price ??
+    minPrice
+  );
+
+
+const priceRangeHtml =
+  priceMode === "option"
+    ? (
+        minPrice === maxPrice
+          ? `฿${minPrice.toLocaleString("th-TH")}`
+          : (
+              `฿${minPrice.toLocaleString("th-TH")}` +
+              `–฿${maxPrice.toLocaleString("th-TH")}`
+            )
+      )
+    : "";
+  const deadlineText = getDeadlineText(product.preorder_deadline);
+  const productId = encodeURIComponent(String(product.product_id || ""));
+  const url = `product.html?id=${productId}`;
+  const isPreorder = String(product.product_type || "preorder").toLowerCase() === "preorder";
+
+  return `
+    <div class="home-card" role="link" tabindex="0"
+      onclick="window.location.href='${url}'"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='${url}'}">
+      <div class="image-box">
+        <img src="${homeEscape(product.image || "")}" alt="${homeEscape(product.name || "สินค้า")}" loading="lazy">
+        ${homeBool(product.new_arrival) ? '<div class="badge-new">NEW</div>' : ""}
+        ${homeBool(product.on_sale) ? '<div class="badge-sale">SALE</div>' : ""}
+        ${isPreorder ? '<div class="badge-preorder">PREORDER</div>' : '<div class="badge-stock">พร้อมส่ง</div>'}
+      </div>
+      <div class="card-body">
+        <h3>${homeEscape(product.name || "")}</h3>
+        <p class="fandom">${homeEscape(product.fandom || "")}</p>
+      <div class="price-box">
+
+  ${
+    priceMode === "option"
+      ? `
+        <div class="normal-price">
+          ${priceRangeHtml}
+        </div>
+      `
+      : homeBool(product.on_sale)
+        ? `
+          <div class="sale-price">
+            ฿${price.toLocaleString("th-TH")}
+          </div>
+
+          <div class="old-price">
+            ฿${oldPrice.toLocaleString("th-TH")}
+          </div>
+        `
+        : `
+          <div class="normal-price">
+            ฿${price.toLocaleString("th-TH")}
+          </div>
+        `
+  }
+
+</div>
+        ${deadlineText ? `<div class="deadline">${homeEscape(deadlineText)}</div>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+function loadFeatured(products){
+  const featured = products
+    .filter(product=>{
+      if(!product.preorder_deadline || product.preorder_deadline === "N/A") return false;
+      const end = new Date(product.preorder_deadline);
+      return !Number.isNaN(end.getTime()) && end >= new Date();
+    })
+    .sort((a,b)=>new Date(a.preorder_deadline) - new Date(b.preorder_deadline));
+
+  const box = document.getElementById("featuredProducts");
+  box.innerHTML = featured.length
+    ? featured.map(createProductCard).join("")
+    : stateHtml("⏰","ยังไม่มีสินค้าที่ใกล้ปิดรับ","สินค้าจำกัดเวลาจะแสดงที่นี่");
+}
+
+function loadNewArrivals(products){
+  const arrivals = products.filter(product=>homeBool(product.new_arrival));
+  const box = document.getElementById("newProducts");
+  box.innerHTML = arrivals.length
+    ? arrivals.map(createProductCard).join("")
+    : stateHtml("⭐","ยังไม่มีสินค้าใหม่","สินค้าใหม่ล่าสุดจะแสดงที่นี่");
+}
+
+function loadFandoms(
+  products
+){
+
+  const fandomCounts =
+    new Map();
+
+
+  products.forEach(
+    product => {
+
+      const fandom =
+        String(
+          product.fandom || ""
+        ).trim();
+
+
+      if(!fandom){
+        return;
+      }
+
+
+      fandomCounts.set(
+        fandom,
+        (
+          fandomCounts.get(
+            fandom
+          ) || 0
+        ) + 1
+      );
+
+    }
+  );
+
+
+  const fandoms =
+    Array.from(
+      fandomCounts.keys()
+    )
+      .sort(
+        (
+          a,
+          b
+        ) =>
+          a.localeCompare(
+            b,
+            "th"
+          )
+      );
+
+
+  const box =
+    document.getElementById(
+      "fandomList"
+    );
+
+
+  if(
+    !fandoms.length
+  ){
+
+    box.innerHTML =
+      stateHtml(
+        "🎮",
+        "ยังไม่มี Fandom",
+        "แฟนด้อมของสินค้าจะแสดงที่นี่"
+      );
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    fandoms
+      .map(
+        fandom => {
+
+          const count =
+            fandomCounts.get(
+              fandom
+            ) || 0;
+
+
+          const url =
+            `browse.html?type=fandom&value=${encodeURIComponent(
+              fandom
+            )}`;
+
+
+          return `
+
+<button
+type="button"
+class="fandom-btn"
+onclick="window.location.href='${url}'"
+>
+${homeEscape(
+  fandom
+)}
+(${count})
+</button>
+
+`;
+
+        }
+      )
+      .join("");
+
+}
+
+function updateCartCount(){
+  let cart = [];
+  try{
+    const parsed = JSON.parse(localStorage.getItem("cart") || "[]");
+    cart = Array.isArray(parsed) ? parsed : [];
+  }catch(error){
+    console.warn("อ่านตะกร้าไม่สำเร็จ",error);
+  }
+
+  const count = cart.reduce((sum,item)=>sum + Math.max(0,Number(item.qty || 0)),0);
+  const cartCount = document.getElementById("cartCount");
+  if(cartCount) cartCount.textContent = count;
+}
+
+window.addEventListener("storage",event=>{
+  if(event.key === "cart") updateCartCount();
+});
+
+loadHome();
+updateCartCount();
+</script>
+
+<script src="menu.js"></script>
+
+<script src="cart-drawer.js"></script>
+<script src="ui.js"></script>
+  
+<script src="theme.js?v=20260918-2"></script>
+</body>
+</html>

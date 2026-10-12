@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rinka Admin</title>
+<link rel="stylesheet" href="admin-theme.css?v=20261001-1">
+
+<style>
+body{
+margin:0;
+font-family:sans-serif;
+background:#f8fbff;
+color:#334155;
+}
+
+button{
+cursor:pointer;
+border:none;
+border-radius:12px;
+padding:10px 14px;
+background:#7dcfff;
+color:white;
+font-weight:700;
+}
+
+input,
+textarea,
+select{
+width:100%;
+box-sizing:border-box;
+padding:10px;
+border:1px solid #ddd;
+border-radius:10px;
+}
+
+#loginBox{
+max-width:360px;
+margin:80px auto;
+background:white;
+padding:24px;
+border-radius:18px;
+box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
+
+.admin-layout{
+display:flex;
+min-height:100vh;
+}
+
+.sidebar{
+width:240px;
+background:white;
+border-right:1px solid #e5e7eb;
+padding:20px;
+box-sizing:border-box;
+position:sticky;
+top:0;
+height:100vh;
+}
+
+.sidebar h2{
+margin-top:0;
+}
+
+.nav-btn{
+width:100%;
+margin-bottom:10px;
+background:#f1f5f9;
+color:#334155;
+text-align:left;
+}
+
+.nav-btn.active{
+background:#7dcfff;
+color:white;
+}
+
+.main{
+flex:1;
+padding:24px;
+box-sizing:border-box;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.card{
+background:white;
+padding:18px;
+border-radius:16px;
+box-shadow:0 2px 10px rgba(0,0,0,.05);
+border:1px solid #e5eefc;
+margin-bottom:16px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+}
+
+.hidden{
+display:none;
+}
+
+.section-title{
+margin-top:0;
+}
+
+.product-form{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:14px;
+}
+
+.full{
+grid-column:1/-1;
+}
+
+.order-card{
+border:1px solid #ddd;
+padding:15px;
+margin-bottom:10px;
+border-radius:12px;
+background:white;
+}
+
+.warning-card{
+border:1px solid #f59e0b;
+background:#fffbeb;
+padding:15px;
+margin-bottom:10px;
+border-radius:12px;
+}
+
+.logout-btn{
+background:#ef4444;
+}
+
+.loading-text{
+margin-top:10px;
+color:#2563eb;
+font-weight:700;
+}
+
+.gift-toolbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+flex-wrap:wrap;
+margin-bottom:16px;
+}
+
+.gift-tree{
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.gift-tree-node{
+border:1px solid #dbeafe;
+border-radius:14px;
+background:#fff;
+overflow:hidden;
+}
+
+.gift-tree-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+padding:14px;
+background:#f8fbff;
+}
+
+.gift-tree-title{
+display:flex;
+align-items:center;
+gap:9px;
+min-width:0;
+}
+
+.gift-tree-title-text{
+font-weight:700;
+word-break:break-word;
+}
+
+.gift-toggle-btn{
+width:auto;
+padding:5px 9px;
+border-radius:8px;
+background:#e0f2fe;
+color:#0369a1;
+flex-shrink:0;
+}
+
+.gift-tree-actions{
+display:flex;
+gap:7px;
+flex-wrap:wrap;
+justify-content:flex-end;
+}
+
+.gift-action-btn{
+width:auto;
+padding:7px 10px;
+font-size:13px;
+}
+
+.gift-edit-btn{
+background:#8b5cf6;
+}
+
+.gift-delete-btn{
+background:#ef4444;
+}
+
+.gift-add-btn{
+background:#10b981;
+}
+
+.gift-tree-children{
+padding:12px 12px 12px 28px;
+border-top:1px solid #e5eefc;
+background:#fff;
+}
+
+.gift-tree-children.hidden{
+display:none;
+}
+
+.gift-rule-node{
+border-left:4px solid #7dd3fc;
+}
+
+.gift-item-node{
+border-left:4px solid #c4b5fd;
+}
+
+.gift-character-node{
+border-left:4px solid #86efac;
+}
+
+.gift-node-meta{
+font-size:13px;
+color:#64748b;
+margin-top:4px;
+line-height:1.6;
+}
+
+.gift-status{
+display:inline-block;
+padding:3px 8px;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+}
+
+.gift-status-active{
+background:#dcfce7;
+color:#166534;
+}
+
+.gift-status-inactive{
+background:#fee2e2;
+color:#991b1b;
+}
+
+.gift-empty{
+padding:24px;
+text-align:center;
+color:#64748b;
+background:#f8fafc;
+border-radius:12px;
+}
+
+.gift-error{
+padding:14px;
+background:#fef2f2;
+border:1px solid #fecaca;
+border-radius:12px;
+color:#991b1b;
+}
+
+.gift-loading{
+padding:24px;
+text-align:center;
+color:#2563eb;
+font-weight:700;
+}
+
+.admin-menu-button{
+display:none;
+
+position:fixed;
+
+top:14px;
+left:14px;
+
+z-index:5000;
+
+width:44px;
+height:44px;
+
+padding:0;
+
+border-radius:12px;
+
+font-size:22px;
+
+box-shadow:
+0 4px 14px
+rgba(15,23,42,.12);
+}
+
+.admin-sidebar-overlay{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(15,23,42,.42);
+z-index:999;
+}
+
+@media(max-width:900px){
+
+  .admin-layout{
+    display:block;
+  }
+
+
+  .sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1000;
+
+    width:min(
+      280px,
+      84vw
+    );
+
+    height:100vh;
+
+    overflow-y:auto;
+
+    transform:
+      translateX(-105%);
+
+    transition:
+      transform .22s ease;
+
+    box-shadow:
+      12px 0 30px
+      rgba(15,23,42,.14);
+  }
+
+
+  .sidebar.open{
+    transform:
+      translateX(0);
+  }
+
+
+  .admin-sidebar-overlay.show{
+    display:block;
+  }
+
+
+  .admin-menu-button{
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+  }
+
+
+  .main{
+    width:100%;
+
+    padding:
+      72px 14px 20px;
+  }
+
+}
+  
+@media(max-width:700px){
+
+.gift-tree-header{
+align-items:flex-start;
+flex-direction:column;
+}
+
+.gift-tree-actions{
+justify-content:flex-start;
+}
+
+.gift-tree-children{
+padding-left:14px;
+}
+
+}
+  
+</style>
+</head>
+
+<body>
+
+<div
+id="adminSessionLoading"
+style="max-width:360px;margin:80px auto;background:white;padding:24px;border-radius:18px;box-shadow:0 2px 12px rgba(0,0,0,.08);text-align:center;display:none;"
+>
+<h2 style="margin-top:0;">🔒 Admin</h2>
+<div style="color:#64748b;">กำลังตรวจสอบเซสชัน...</div>
+</div>
+
+<div id="loginBox" style="display:none;">
+<h2>🔒 Admin Login</h2>
+
+<input
+type="password"
+id="adminPassword"
+placeholder="รหัสผ่าน">
+
+<br><br>
+
+<button onclick="login()">
+เข้าสู่ระบบ
+</button>
+</div>
+
+<div
+id="adminContent"
+style="display:none;">
+
+<div class="admin-layout">
+
+<div
+id="adminSidebarOverlay"
+class="admin-sidebar-overlay"
+onclick="closeAdminSidebar()"
+></div>
+
+<button
+type="button"
+class="admin-menu-button"
+onclick="toggleAdminSidebar()"
+aria-label="เปิดเมนูแอดมิน"
+>
+☰
+</button>
+
+<aside
+class="sidebar"
+id="adminSidebar"
+>
+
+<h2>☁️ Rinka Admin</h2>
+
+<button
+class="nav-btn active"
+id="nav_dashboard"
+onclick="showAdminTab('dashboard')">
+📊 Dashboard
+</button>
+
+<button
+class="nav-btn"
+id="nav_products"
+onclick="showAdminTab('products')">
+🛍️ เพิ่มสินค้า
+</button>
+
+<button
+class="nav-btn"
+id="nav_options"
+onclick="showAdminTab('options')">
+🎭 ตัวเลือกสินค้า
+</button>
+
+<button
+class="nav-btn"
+id="nav_orders"
+onclick="showAdminTab('orders')">
+📦 จัดการคำสั่งซื้อ
+</button>
+
+<button
+class="nav-btn"
+id="nav_shipped_orders"
+onclick="showAdminTab('shipped_orders')">
+✅ ออเดอร์ที่จัดส่งแล้ว
+</button>
+
+<button
+class="nav-btn"
+id="nav_address"
+onclick="showAdminTab('address')">
+📍 คำขอเปลี่ยนที่อยู่
+</button>
+
+<button
+class="nav-btn"
+id="nav_collections"
+onclick="showAdminTab('collections')">
+🖼️ Collections
+</button>
+
+<button
+class="nav-btn"
+id="nav_gifts"
+onclick="showAdminTab('gifts')">
+🎁 ของแถม
+</button>
+
+<button
+class="nav-btn"
+id="nav_manual_order"
+onclick="showAdminTab('manual_order')">
+🧾 สร้างออเดอร์
+</button>
+
+<button
+class="nav-btn"
+id="nav_legacy_orders"
+onclick="showAdminTab('legacy_orders')">
+📚 นำเข้าออเดอร์เก่า
+</button>
+
+<button
+id="nav_customer_lookup"
+type="button"
+onclick="showAdminTab('customer_lookup')"
+>
+  🔎 ค้นหาออเดอร์ลูกค้า
+</button>
+
+
+
+<div class="admin-theme-control">
+  <span>ธีม</span>
+  <button
+    id="rinkaThemeButton"
+    type="button"
+    class="admin-theme-button"
+    aria-label="เปลี่ยนธีม"
+  >
+    🖥️ System
+  </button>
+</div>
+
+<hr>
+
+<button
+class="logout-btn"
+onclick="logout()">
+🚪 ออกจากระบบ
+</button>
+
+</aside>
+
+<main class="main">
+
+<section id="tab_dashboard">
+
+<div class="topbar">
+<h1>📊 Dashboard</h1>
+</div>
+
+<div id="stats"></div>
+<div id="topProducts"></div>
+<div id="topFandoms"></div>
+
+</section>
+
+<section
+id="tab_options"
+class="hidden">
+
+<h1 class="section-title">
+🎭 Product Option Manager
+</h1>
+
+<div id="optionManager">
+กำลังโหลด...
+</div>
+
+</section>
+
+<section
+id="tab_products"
+class="hidden">
+
+<h1 class="section-title">
+🛍️ เพิ่มสินค้า
+</h1>
+
+<div id="productManager"></div>
+
+</section>
+
+<section
+id="tab_orders"
+class="hidden">
+
+<h1 class="section-title">
+📦 จัดการคำสั่งซื้อ
+</h1>
+
+<div id="orders"></div>
+
+</section>
+
+<section
+id="tab_shipped_orders"
+class="hidden">
+
+<h1 class="section-title">
+✅ ออเดอร์ที่จัดส่งแล้ว
+</h1>
+
+<div id="shippedOrders"></div>
+
+</section>
+
+<section
+id="tab_address"
+class="hidden">
+
+<h1 class="section-title">
+📍 คำขอเปลี่ยนที่อยู่
+</h1>
+
+<div id="addressRequests"></div>
+
+</section>
+
+<section
+id="tab_collections"
+class="hidden">
+
+<h1 class="section-title">
+🖼️ Collections Manager
+</h1>
+
+<div id="collectionManager">
+กำลังโหลด...
+</div>
+
+</section>
+
+<section
+id="tab_gifts"
+class="hidden">
+
+<h1 class="section-title">
+🎁 Gift Manager
+</h1>
+
+<div id="giftManager">
+กำลังโหลด...
+</div>
+
+</section>
+
+<section id="tab_manual_order" class="hidden">
+  <h1 class="section-title">🧾 สร้างออเดอร์ให้ลูกค้า</h1>
+  <div id="manualOrderManager">กำลังโหลด...</div>
+</section>
+
+<section id="tab_legacy_orders" class="hidden">
+  <h1 class="section-title">📚 นำเข้าออเดอร์ลูกค้าเก่า</h1>
+  <div id="legacyOrderManager">กำลังโหลด...</div>
+</section>
+
+<section
+id="tab_customer_lookup"
+class="admin-tab hidden"
+>
+
+  <div id="adminCustomerOrderLookup"></div>
+
+</section>
+
+</main>
+
+</div>
+</div>
+
+<div
+id="editProductModal"
+class="hidden"
+style="
+position:fixed;
+inset:0;
+background:rgba(15,23,42,.55);
+z-index:9999;
+padding:20px;
+overflow:auto;
+">
+
+<div
+class="card"
+style="
+max-width:850px;
+margin:30px auto;
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
+
+<h2>
+✏️ แก้ไขสินค้า
+</h2>
+
+<button
+type="button"
+onclick="closeEditProductModal()"
+style="background:#64748b;">
+✕
+</button>
+
+</div>
+
+<div
+id="editProductForm"
+class="product-form">
+</div>
+
+<br>
+
+<button
+id="updateProductBtn"
+onclick="submitProductEdit()">
+💾 บันทึกการแก้ไข
+</button>
+
+<div
+id="updateProductLoading"
+class="loading-text"
+style="display:none;">
+⏳ กำลังบันทึก...
+</div>
+
+</div>
+
+</div>
+
+<div
+id="editCollectionModal"
+class="hidden"
+style="
+position:fixed;
+inset:0;
+background:rgba(15,23,42,.55);
+z-index:9999;
+padding:20px;
+overflow:auto;
+">
+
+<div
+class="card"
+style="
+max-width:850px;
+margin:30px auto;
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
+
+<h2>
+✏️ แก้ไข Collection
+</h2>
+
+<button
+type="button"
+onclick="closeEditCollectionModal()"
+style="background:#64748b;">
+✕
+</button>
+
+</div>
+
+<div
+id="editCollectionForm"
+class="product-form">
+</div>
+
+<br>
+
+<button
+id="updateCollectionBtn"
+onclick="submitCollectionEdit()">
+💾 บันทึกการแก้ไข
+</button>
+
+<div
+id="updateCollectionLoading"
+class="loading-text"
+style="display:none;">
+⏳ กำลังบันทึก Collection...
+</div>
+
+</div>
+
+</div>
+
+  <div
+id="giftModal"
+class="hidden"
+style="
+position:fixed;
+inset:0;
+background:rgba(15,23,42,.55);
+z-index:9999;
+padding:20px;
+overflow:auto;
+"
+onclick="handleGiftModalBackdrop(event)"
+>
+
+<div
+class="card"
+style="
+max-width:760px;
+margin:30px auto;
+"
+>
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+"
+>
+
+<h2
+id="giftModalTitle"
+style="margin:0;"
+>
+🎁 Gift Manager
+</h2>
+
+<button
+type="button"
+onclick="closeGiftModal()"
+style="
+background:#64748b;
+width:auto;
+"
+>
+✕
+</button>
+
+</div>
+
+<br>
+
+<div
+id="giftModalBody"
+class="product-form"
+>
+</div>
+
+<br>
+
+<div
+style="
+display:flex;
+justify-content:flex-end;
+gap:10px;
+flex-wrap:wrap;
+"
+>
+
+<button
+type="button"
+onclick="closeGiftModal()"
+style="background:#64748b;"
+>
+ยกเลิก
+</button>
+
+<button
+id="giftModalSaveBtn"
+type="button"
+onclick="submitGiftModal()"
+>
+💾 บันทึก
+</button>
+
+</div>
+
+<div
+id="giftModalLoading"
+class="loading-text"
+style="display:none;"
+>
+⏳ กำลังบันทึก...
+</div>
+
+</div>
+
+</div>
+
+<script src="theme.js?v=20261001-1"></script>
+
+<script src="./js/admin-utils.js?v=20260819-4"></script>
+
+<script src="./js/admin-dashboard.js?v=20260819-4"></script>
+
+<script src="./js/admin-products.js?v=20260819-4"></script>
+
+<script src="./js/admin-collections.js?v=20260819-4"></script>
+
+<script src="./js/admin-options.js?v=20260819-4"></script>
+
+<script src="./js/admin-gifts.js?v=20260819-4"></script>
+
+<script src="./js/admin-orders.js?v=20260819-4"></script>
+
+<script src="./js/admin-address.js?v=20260819-4"></script>
+
+<script src="./js/admin-manual-order.js?v=20260819-4"></script>
+
+<script src="./js/admin-legacy-orders.js?v=20260819-4"></script>
+
+<script src="./js/admin-customer-order-lookup.js?v=20260819-4"></script>
+
+<script src="./js/admin.js?v=20260819-4"></script>
+</body>
+</html>

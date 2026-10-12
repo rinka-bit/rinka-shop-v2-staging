@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>รายการออเดอร์ | Rinka Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#7dcfff;--pd:#4ba5db;--bg:#f6fbff;--card:#fff;--text:#334155;--muted:#64748b;--border:#dbe7f1}
+*{box-sizing:border-box} body{margin:0;font-family:'Kodchasan',sans-serif;background:linear-gradient(180deg,#fbfdff,var(--bg));color:var(--text)}
+button,a{font:inherit}.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;min-height:68px;padding:11px 16px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+.topbar button,.topbar a{width:46px;height:46px;border:none;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text);font-size:21px;box-shadow:0 4px 14px rgba(71,85,105,.1)}
+.topbar h1{margin:0;flex:1;text-align:center;font-size:20px;color:#3f6078}.container{width:min(900px,100%);margin:auto;padding:20px 16px 46px}
+.filter-bar{display:flex;gap:9px;overflow:auto;padding-bottom:6px;margin-bottom:16px}.filter-chip{flex:0 0 auto;padding:9px 13px;border:1px solid var(--border);border-radius:999px;background:#fff;color:#4f6f84;text-decoration:none;font-size:13px;font-weight:700}.filter-chip.active{background:#e9f7ff;border-color:#90d6fb;color:#2f7ca9}
+.order-list{display:grid;gap:13px}.order-card{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:13px;align-items:center;padding:14px;background:#fff;border:1px solid var(--border);border-radius:19px;box-shadow:0 7px 22px rgba(86,142,178,.08);cursor:pointer;transition:.2s}
+.order-card:hover{transform:translateY(-3px);box-shadow:0 13px 28px rgba(86,142,178,.13)}.order-image{width:82px;height:82px;border-radius:13px;object-fit:cover;background:#edf7fc}
+.order-main{min-width:0}.order-id{font-weight:700}.order-name{margin-top:4px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.order-meta{margin-top:5px;color:var(--muted);font-size:12px}
+.order-side{text-align:right}.order-total{font-weight:700;color:#287caf}.order-date{margin-top:5px;color:var(--muted);font-size:11px}.badge{display:inline-flex;margin-top:7px;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700}.b-pending{background:#fff7ed;color:#c2410c}.b-progress{background:#eff6ff;color:#1d4ed8}.b-ready{background:#fefce8;color:#a16207}.b-shipped{background:#ecfdf5;color:#166534}
+.state{min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;background:#fff;border:1px solid var(--border);border-radius:21px;padding:25px}.state p{margin:0;color:var(--muted)}.state a,.state button{border:none;border-radius:999px;padding:10px 17px;background:var(--p);color:#fff;text-decoration:none;font-weight:700}.spinner{width:36px;height:36px;border:4px solid #dff2fc;border-top-color:var(--pd);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){.container{padding:14px 10px 36px}.order-card{grid-template-columns:68px minmax(0,1fr);gap:10px}.order-image{width:68px;height:68px}.order-side{grid-column:2;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px}.order-side .badge{margin-top:0}.topbar h1{font-size:17px}}
+</style>
+<link rel="stylesheet" href="theme.css?v=20260918-2">
+<link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
+</head>
+<body>
+<header class="topbar">
+<button type="button" onclick="goOrdersBack()" aria-label="กลับ">←</button>
+<h1 id="pageTitle">รายการออเดอร์</h1>
+<a href="account.html" aria-label="บัญชี">👤</a>
+</header>
+<main class="container">
+<nav class="filter-bar" id="filterBar"></nav>
+<section id="orderList" class="state">
+<div class="spinner"></div><h2>กำลังโหลดออเดอร์</h2><p>รอสักครู่นะคะ</p>
+</section>
+</main>
+<script>
+const API="https://script.google.com/macros/s/AKfycbwpwT5sgetNYhEtGz9NMaaYcedgEgU_32udT0TjTIyKn99ZqmZFYggvGCBXiva-KeVx6Q/exec";
+const customer=safeJson(localStorage.getItem("customer"),{});
+const sessionToken=String(customer.session_token||localStorage.getItem("session_token")||"").trim();
+const params =
+  new URLSearchParams(
+    location.search
+  );
+
+let statusFilter =
+  params.get(
+    "status"
+  ) || "";
+
+let customerOrdersCache = [];
+
+let legacyOrdersCache = [];
+
+let dmOrdersCache = [];
+
+let ordersLoading = false;
+  
+const FILTERS = [
+
+  [
+    "",
+    "ทั้งหมด"
+  ],
+
+  [
+    "pending_order",
+    "รอกดสั่งสินค้า"
+  ],
+
+  [
+    "pending",
+    "กดสั่งสินค้าแล้ว"
+  ],
+
+  [
+    "china_arrived",
+    "ถึงโกดังจีน"
+  ],
+
+  [
+    "shipping_to_th",
+    "กำลังมาไทย"
+  ],
+
+  [
+    "ready_to_ship",
+    "เตรียมจัดส่ง"
+  ],
+
+  [
+    "shipped",
+    "จัดส่งแล้ว"
+  ]
+
+];
+document.addEventListener("DOMContentLoaded",()=>{renderFilters();loadOrders()});
+  
+function renderFilters(){
+
+  const box =
+    document.getElementById(
+      "filterBar"
+    );
+
+  box.innerHTML =
+    FILTERS
+      .map(
+        ([value,text]) => `
+
+<button
+type="button"
+class="filter-chip ${
+  value === statusFilter
+    ? "active"
+    : ""
+}"
+onclick='setOrdersStatusFilter(
+  ${JSON.stringify(value)}
+)'
+>
+  ${esc(text)}
+</button>
+
+`
+      )
+      .join("");
+
+}
+
+function setOrdersStatusFilter(
+  status
+){
+
+  statusFilter =
+    String(
+      status || ""
+    );
+
+
+  /*
+  เปลี่ยน URL
+  แต่ไม่ reload หน้า
+  */
+
+  const url =
+    new URL(
+      window.location.href
+    );
+
+
+  if(statusFilter){
+
+    url.searchParams.set(
+      "status",
+      statusFilter
+    );
+
+  }else{
+
+    url.searchParams.delete(
+      "status"
+    );
+
+  }
+
+
+  history.replaceState(
+    null,
+    "",
+    url
+  );
+
+
+  renderFilters();
+
+  renderOrdersFromCache();
+
+}
+
+ function statusText(s){
+
+  return {
+
+    pending_order:
+      "รอกดสั่งสินค้า",
+
+    pending:
+      "กดสั่งสินค้าแล้ว",
+
+    china_arrived:
+      "ถึงโกดังจีนแล้ว",
+
+    shipping_to_th:
+      "กำลังมาไทย",
+
+    ready_to_ship:
+      "เตรียมจัดส่ง",
+
+    shipped:
+      "จัดส่งแล้ว",
+
+    completed:
+      "เสร็จสิ้น"
+
+  }[s] || s || "-";
+
+}
+ 
+function statusClass(s){
+
+  if(
+    s === "pending_order"
+  ){
+
+    return "b-pending";
+
+  }
+
+  if(
+    s === "pending"
+  ){
+
+    return "b-progress";
+
+  }
+
+  if(
+    s === "ready_to_ship"
+  ){
+
+    return "b-ready";
+
+  }
+
+  if(
+    s === "shipped" ||
+    s === "completed"
+  ){
+
+    return "b-shipped";
+
+  }
+
+  return "b-progress";
+
+}
+
+  function legacyStatusCode(
+  status
+){
+
+  const value =
+    String(
+      status || ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  const map = {
+
+    "รอกดสั่งสินค้า":
+      "pending_order",
+
+    "กดสั่งสินค้าแล้ว":
+      "pending",
+
+    "ถึงโกดังจีน":
+      "china_arrived",
+
+    "ถึงโกดังจีนแล้ว":
+      "china_arrived",
+
+    "กำลังมาไทย":
+      "shipping_to_th",
+
+    "เตรียมจัดส่ง":
+      "ready_to_ship",
+
+    "จัดส่งแล้ว":
+      "shipped",
+
+    "เสร็จสิ้น":
+      "completed"
+
+  };
+
+
+  /*
+  เผื่อชีตเก่าเก็บ code อยู่แล้ว
+  */
+
+  if(
+    [
+      "pending_order",
+      "pending",
+      "china_arrived",
+      "shipping_to_th",
+      "ready_to_ship",
+      "shipped",
+      "completed"
+    ].includes(
+      value
+    )
+  ){
+
+    return value;
+
+  }
+
+
+  return (
+    map[value] ||
+    ""
+  );
+
+}
+
+  function getOrdersCacheKey(){
+
+  const key =
+    String(
+      customer.customer_id ||
+      customer.email ||
+      "customer"
+    )
+      .trim()
+      .toLowerCase();
+
+
+  return (
+    "rinka_customer_orders_" +
+    key
+  );
+
+}
+
+
+function readOrdersLocalCache(){
+
+  try{
+
+    const data =
+      JSON.parse(
+        localStorage.getItem(
+          getOrdersCacheKey()
+        ) ||
+        "[]"
+      );
+
+
+    return Array.isArray(
+      data
+    )
+      ? data
+      : [];
+
+
+  }catch(error){
+
+    return [];
+
+  }
+
+}
+
+
+function saveOrdersLocalCache(
+  orders
+){
+
+  try{
+
+    localStorage.setItem(
+      getOrdersCacheKey(),
+      JSON.stringify(
+        Array.isArray(
+          orders
+        )
+          ? orders
+          : []
+      )
+    );
+
+
+  }catch(error){
+
+    console.warn(
+      "Save orders cache failed:",
+      error
+    );
+
+  }
+
+}
+  
+async function loadOrders(){
+
+  if(ordersLoading){
+    return;
+  }
+
+  const box =
+    document.getElementById(
+      "orderList"
+    );
+
+  if(
+    !sessionToken &&
+    !customer.email
+  ){
+
+    location.href =
+      "login.html";
+
+    return;
+
+  }
+
+  ordersLoading = true;
+
+  const cachedOrders =
+    readOrdersLocalCache();
+
+  if(cachedOrders.length){
+
+    customerOrdersCache =
+      cachedOrders;
+
+    renderOrdersFromCache();
+
+  }else{
+
+    box.className =
+      "state";
+
+    box.innerHTML = `
+
+<div class="spinner"></div>
+
+<h2>
+กำลังโหลดออเดอร์
+</h2>
+
+<p>
+รอสักครู่นะคะ
+</p>
+
+`;
+
+  }
+
+  try{
+
+    /*
+    =========================================
+    STORE ORDERS + DM INVOICES
+    =========================================
+    */
+
+    const newQuery =
+      new URLSearchParams({
+        action:
+          "customerOrders"
+      });
+
+    if(sessionToken){
+
+      newQuery.set(
+        "session_token",
+        sessionToken
+      );
+
+    }else{
+
+      newQuery.set(
+        "email",
+        customer.email || ""
+      );
+
+    }
+
+    const dmQuery =
+      new URLSearchParams({
+        action:
+          "customerDMInvoices",
+        session_token:
+          sessionToken
+      });
+
+    const [
+      newResponse,
+      dmResponse
+    ] =
+      await Promise.all([
+        fetch(
+          API +
+          "?" +
+          newQuery.toString()
+        ),
+        fetch(
+          API +
+          "?" +
+          dmQuery.toString()
+        )
+      ]);
+
+    if(!newResponse.ok){
+
+      throw new Error(
+        "โหลดออเดอร์เว็บไซต์ไม่สำเร็จ: HTTP " +
+        newResponse.status
+      );
+
+    }
+
+    if(!dmResponse.ok){
+
+      throw new Error(
+        "โหลด DM Invoice ไม่สำเร็จ: HTTP " +
+        dmResponse.status
+      );
+
+    }
+
+    const [
+      newData,
+      dmData
+    ] =
+      await Promise.all([
+        newResponse.json(),
+        dmResponse.json()
+      ]);
+
+    if(
+      newData &&
+      newData.success === false
+    ){
+
+      throw new Error(
+        newData.error ||
+        "โหลดออเดอร์ไม่สำเร็จ"
+      );
+
+    }
+
+    if(
+      !dmData ||
+      dmData.success !== true
+    ){
+
+      throw new Error(
+        dmData?.error ||
+        "โหลด DM Invoice ไม่สำเร็จ"
+      );
+
+    }
+
+    customerOrdersCache =
+      Array.isArray(
+        newData
+      )
+        ? newData
+        : Array.isArray(
+            newData.orders
+          )
+          ? newData.orders
+          : [];
+
+    customerOrdersCache =
+      customerOrdersCache.map(
+        item => ({
+          ...item,
+          order_source:
+            "store"
+        })
+      );
+
+    const dmRaw =
+      Array.isArray(
+        dmData.orders
+      )
+        ? dmData.orders
+        : Array.isArray(
+            dmData.invoices
+          )
+          ? dmData.invoices
+          : [];
+
+    /*
+    หน้า "รายการออเดอร์" แสดงเฉพาะ DM Invoice
+    ประเภท product
+    ส่วน shipping invoice ไม่ถือเป็นออเดอร์สินค้า
+    */
+    dmOrdersCache =
+      dmRaw
+        .filter(
+          item =>
+            String(
+              item.invoice_type ||
+              "product"
+            )
+              .trim()
+              .toLowerCase() ===
+            "product"
+        )
+        .map(
+          item => {
+
+            let status =
+              String(
+                item.status || ""
+              )
+                .trim()
+                .toLowerCase();
+
+            if(
+              !status ||
+              status === "sent" ||
+              status === "payment_submitted"
+            ){
+
+              status =
+                "pending_order";
+
+            }
+
+            return {
+              ...item,
+              status,
+              order_source:
+                "dm_invoice",
+              order_id:
+                item.order_id ||
+                item.invoice_id ||
+                ""
+            };
+
+          }
+        );
+
+    saveOrdersLocalCache(
+      customerOrdersCache
+    );
+
+    renderOrdersFromCache();
+
+    /*
+    =========================================
+    LEGACY LOAD AFTERWARD
+    =========================================
+    */
+
+    if(sessionToken){
+
+      try{
+
+        const legacyQuery =
+          new URLSearchParams({
+
+            action:
+              "legacyOrders",
+
+            session_token:
+              sessionToken
+
+          });
+
+        const legacyResponse =
+          await fetch(
+            API +
+            "?" +
+            legacyQuery.toString()
+          );
+
+        if(legacyResponse.ok){
+
+          const legacyData =
+            await legacyResponse.json();
+
+          if(
+            legacyData &&
+            legacyData.success === true &&
+            Array.isArray(
+              legacyData.orders
+            )
+          ){
+
+            legacyOrdersCache =
+              legacyData.orders;
+
+          }
+
+        }
+
+      }catch(error){
+
+        console.warn(
+          "Legacy orders load failed:",
+          error
+        );
+
+      }
+
+      renderOrdersFromCache();
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "loadOrders error:",
+      error
+    );
+
+    box.className =
+      "state";
+
+    box.innerHTML = `
+
+<div style="font-size:50px">
+⚠️
+</div>
+
+<h2>
+โหลดออเดอร์ไม่สำเร็จ
+</h2>
+
+<p>
+${esc(
+  error.message ||
+  String(error)
+)}
+</p>
+
+<button
+type="button"
+onclick="loadOrders()"
+>
+ลองใหม่
+</button>
+
+`;
+
+  }finally{
+
+    ordersLoading = false;
+
+  }
+
+}
+
+function renderOrdersFromCache(){
+
+  const box =
+    document.getElementById(
+      "orderList"
+    );
+
+  document
+    .getElementById(
+      "pageTitle"
+    )
+    .textContent =
+      statusFilter
+        ? statusText(
+            statusFilter
+          )
+        : "รายการออเดอร์ทั้งหมด";
+
+  const storeOrders =
+    statusFilter
+      ? customerOrdersCache.filter(
+          order =>
+            String(
+              order.status || ""
+            ) ===
+            statusFilter
+        )
+      : customerOrdersCache;
+
+  const dmOrders =
+    statusFilter
+      ? dmOrdersCache.filter(
+          order =>
+            String(
+              order.status || ""
+            ) ===
+            statusFilter
+        )
+      : dmOrdersCache;
+
+  /*
+  Store + DM เรียงรวมตามวันที่
+  */
+  const currentOrders =
+    [
+      ...storeOrders,
+      ...dmOrders
+    ].sort(
+      (a,b) =>
+        new Date(
+          b.created_at || 0
+        ).getTime() -
+        new Date(
+          a.created_at || 0
+        ).getTime()
+    );
+
+  const legacyOrders =
+    statusFilter
+      ? legacyOrdersCache.filter(
+          order =>
+            legacyStatusCode(
+              order.status
+            ) ===
+            statusFilter
+        )
+      : legacyOrdersCache;
+
+  if(
+    currentOrders.length === 0 &&
+    legacyOrders.length === 0
+  ){
+
+    box.className =
+      "state";
+
+    box.innerHTML = `
+
+<div style="font-size:50px">
+📦
+</div>
+
+<h2>
+ยังไม่มีออเดอร์
+</h2>
+
+<p>
+${
+  statusFilter
+    ? "ยังไม่มีออเดอร์ในสถานะนี้"
+    : "เมื่อสั่งซื้อแล้ว ออเดอร์จะแสดงที่นี่"
+}
+</p>
+
+<a href="browse.html">
+เลือกซื้อสินค้า
+</a>
+
+`;
+
+    return;
+
+  }
+
+  let html = "";
+
+  if(
+    currentOrders.length
+  ){
+
+    html +=
+      currentOrders
+        .map(
+          orderCard
+        )
+        .join("");
+
+  }
+
+  if(
+    legacyOrders.length
+  ){
+
+    html += `
+
+<div
+style="
+margin:10px 2px 0;
+padding-top:14px;
+border-top:1px solid var(--border);
+"
+>
+
+<div
+style="
+font-size:16px;
+font-weight:700;
+color:#3f6078;
+"
+>
+🗃️ ออเดอร์จากระบบเก่า
+</div>
+
+<div
+style="
+margin-top:3px;
+color:var(--muted);
+font-size:11px;
+"
+>
+รายการจากระบบสั่งซื้อเดิมของร้าน
+</div>
+
+</div>
+
+`;
+
+    html +=
+      legacyOrders
+        .map(
+          legacyOrderCard
+        )
+        .join("");
+
+  }
+
+  box.className =
+    "order-list";
+
+  box.innerHTML =
+    html;
+
+}
+
+function orderCard(o){
+
+  const date =
+    o.created_at
+      ? new Date(
+          o.created_at
+        ).toLocaleDateString(
+          "th-TH",
+          {
+            year:"numeric",
+            month:"short",
+            day:"numeric"
+          }
+        )
+      : "-";
+
+  const source =
+    String(
+      o.order_source ||
+      o.order_type ||
+      o.source ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+  const isDM =
+    source === "dm_invoice" ||
+    String(
+      o.order_id ||
+      o.invoice_id ||
+      ""
+    ).startsWith(
+      "INV-"
+    );
+
+  const id =
+    String(
+      o.order_id ||
+      o.invoice_id ||
+      ""
+    );
+
+  const normalizedStatus =
+    String(
+      o.status || ""
+    )
+      .trim()
+      .toLowerCase();
+
+  /*
+  DM Invoice:
+  - pending_order = ยังเป็นใบแจ้งชำระ / Invoice
+  - pending ขึ้นไป = เข้าสู่ workflow คำสั่งซื้อแล้ว
+  */
+  const dmStillInvoice =
+    isDM &&
+    (
+      !normalizedStatus ||
+      normalizedStatus === "sent" ||
+      normalizedStatus === "payment_submitted" ||
+      normalizedStatus === "pending_order"
+    );
+
+  const url =
+    dmStillInvoice
+      ? "invoice.html?id=" +
+        encodeURIComponent(id)
+      : "order.html?id=" +
+        encodeURIComponent(id);
+
+  const image =
+    String(
+      o.preview_image ||
+      o.image_url ||
+      ""
+    );
+
+  const name =
+    String(
+      o.preview_name ||
+      o.product_name ||
+      "รายการสินค้า"
+    );
+
+  const sourceBadge =
+    isDM
+      ? `
+        <span
+          style="
+            display:inline-block;
+            padding:4px 7px;
+            margin-right:5px;
+            border-radius:999px;
+            background:#fff1f2;
+            color:#be185d;
+            font-size:9px;
+            vertical-align:middle;
+          "
+        >
+          💬 DM Invoice
+        </span>
+      `
+      : "";
+
+  return `
+
+<article
+class="order-card"
+tabindex="0"
+role="link"
+onclick='location.href=${JSON.stringify(url)}'
+onkeydown="cardKey(event,this)"
+>
+
+${
+  image
+    ? `
+      <img
+        class="order-image"
+        src="${attr(image)}"
+        alt="${attr(name)}"
+        loading="lazy"
+      >
+    `
+    : `
+      <div
+        class="order-image"
+        style="
+          display:flex;
+          align-items:center;
+          justify-content:center;
+        "
+      >
+        📦
+      </div>
+    `
+}
+
+<div class="order-main">
+
+  <div class="order-id">
+    ${sourceBadge}
+    ${esc(id || "-")}
+  </div>
+
+  <div class="order-name">
+    ${esc(name)}
+  </div>
+
+  <div class="order-meta">
+    ${Number(
+      o.item_count ||
+      (
+        Array.isArray(o.items)
+          ? o.items.length
+          : 0
+      )
+    ).toLocaleString("th-TH")} รายการ
+  </div>
+
+</div>
+
+<div class="order-side">
+
+  <div>
+
+    <div class="order-total">
+      ฿${Number(
+        o.total || 0
+      ).toLocaleString("th-TH")}
+    </div>
+
+    <div class="order-date">
+      ${date}
+    </div>
+
+  </div>
+
+  <span
+    class="badge ${statusClass(o.status)}"
+  >
+    ${statusText(o.status)}
+  </span>
+
+</div>
+
+</article>
+
+`;
+
+}
+
+function legacyOrderCard(
+  order
+){
+
+  const legacyId =
+    String(
+      order.legacy_id || ""
+    );
+
+
+  const name =
+    String(
+      order.product_name ||
+      "รายการสินค้า"
+    );
+
+
+  const image =
+    String(
+      order.image || ""
+    );
+
+
+  const fandom =
+    String(
+      order.fandom || ""
+    );
+
+
+  const status =
+    String(
+      order.status || ""
+    );
+
+
+  const qty =
+    Math.max(
+      0,
+      Number(
+        order.qty || 0
+      )
+    );
+
+
+  const remaining =
+    Number(
+      order.remaining || 0
+    );
+
+
+  const paid =
+    Number(
+      order.paid || 0
+    );
+
+
+  const url =
+    "legacy-order.html?id=" +
+    encodeURIComponent(
+      legacyId
+    );
+
+
+  return `
+
+    <article
+      class="order-card"
+      tabindex="0"
+      role="link"
+      onclick='location.href=${JSON.stringify(
+        url
+      )}'
+      onkeydown="cardKey(event,this)"
+    >
+
+      ${
+        image
+
+          ? `
+
+            <img
+              class="order-image"
+              src="${attr(image)}"
+              alt="${attr(name)}"
+              loading="lazy"
+            >
+
+          `
+
+          : `
+
+            <div
+              class="order-image"
+              style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+              "
+            >
+              📦
+            </div>
+
+          `
+      }
+
+
+      <div class="order-main">
+
+        <div class="order-id">
+
+          <span
+            style="
+              display:inline-block;
+              padding:4px 7px;
+              margin-right:5px;
+              border-radius:999px;
+              background:#f5f3ff;
+              color:#6d28d9;
+              font-size:9px;
+              vertical-align:middle;
+            "
+          >
+            ออเดอร์เก่า
+          </span>
+
+          ${esc(
+            fandom ||
+            "ระบบเดิม"
+          )}
+
+        </div>
+
+
+        <div class="order-name">
+          ${esc(name)}
+        </div>
+
+
+        <div class="order-meta">
+
+          ${qty.toLocaleString(
+            "th-TH"
+          )} ชิ้น
+
+          ${
+            status
+              ? " • " +
+                esc(status)
+              : ""
+          }
+
+        </div>
+
+      </div>
+
+
+      <div class="order-side">
+
+        <div>
+
+          <div class="order-total">
+
+            ${
+              remaining > 0
+
+                ? "คงเหลือ ฿" +
+                  remaining.toLocaleString(
+                    "th-TH",
+                    {
+                      maximumFractionDigits:2
+                    }
+                  )
+
+                : "ชำระ ฿" +
+                  paid.toLocaleString(
+                    "th-TH",
+                    {
+                      maximumFractionDigits:2
+                    }
+                  )
+            }
+
+          </div>
+
+          <div class="order-date">
+            ระบบเดิม
+          </div>
+
+        </div>
+
+
+        <span
+          class="badge b-progress"
+        >
+          ${esc(
+            status ||
+            "ออเดอร์เก่า"
+          )}
+        </span>
+
+      </div>
+
+    </article>
+
+  `;
+
+}
+  
+function cardKey(e,el){if(e.key==="Enter"||e.key===" "){e.preventDefault();el.click()}}
+function goOrdersBack(){if(document.referrer&&document.referrer!==location.href)history.back();else location.href="account.html"}
+function safeJson(v,f){try{return JSON.parse(v||"")}catch(e){return f}}
+function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function attr(v){return esc(v)}
+</script>
+<script src="theme.js?v=20260918-2"></script>
+</body>
+</html>

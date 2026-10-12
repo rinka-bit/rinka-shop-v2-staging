@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>จัดการที่อยู่ | Rinka Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#7dcfff;--pd:#4ba5db;--bg:#f6fbff;--text:#334155;--muted:#64748b;--border:#dbe7f1;--danger:#be123c}
+*{box-sizing:border-box}body{margin:0;font-family:'Kodchasan',sans-serif;color:var(--text);background:linear-gradient(180deg,#fbfdff,var(--bg))}
+button,a{font:inherit}button{cursor:pointer}.topbar{position:sticky;top:0;z-index:100;min-height:68px;display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+.topbar button,.topbar a{width:46px;height:46px;border:none;border-radius:999px;background:#fff;color:var(--text);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:21px;box-shadow:0 4px 14px rgba(71,85,105,.1)}
+.topbar h1{margin:0;flex:1;text-align:center;font-size:20px;color:#3f6078}.container{width:min(780px,100%);margin:auto;padding:20px 16px 100px}
+.hero{padding:20px;border:1px solid var(--border);border-radius:21px;background:linear-gradient(135deg,#f3fbff,#fff);box-shadow:0 9px 28px rgba(86,142,178,.09);margin-bottom:16px}.hero h2{margin:0;color:#355a73}.hero p{margin:8px 0 0;color:var(--muted)}
+.list{display:grid;gap:12px}.address-card{padding:16px;border:1px solid var(--border);border-radius:18px;background:#fff;box-shadow:0 7px 22px rgba(86,142,178,.07)}.address-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.badges{display:flex;flex-wrap:wrap;gap:6px}.label{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eff6ff;color:#2563eb;font-size:11px;font-weight:700}.default{background:#dcfce7;color:#166534}
+.address-name{margin-top:10px;font-size:17px;font-weight:700}.line{display:flex;gap:8px;margin-top:7px;color:#526777;line-height:1.6}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.card-button{border:1px solid #cde6f5;border-radius:999px;padding:9px 13px;background:#eef8ff;color:#3476a2;font-weight:700}.select-button{border:none;background:linear-gradient(135deg,#7dcfff,#57b8ed);color:#fff}
+.add-btn{position:fixed;left:50%;bottom:18px;z-index:80;width:min(520px,calc(100% - 28px));min-height:50px;transform:translateX(-50%);border:none;border-radius:999px;background:linear-gradient(135deg,#7dcfff,#57b8ed);color:#fff;font-weight:700;box-shadow:0 10px 25px rgba(87,184,237,.28)}
+.state{min-height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;border:1px solid var(--border);border-radius:20px;background:#fff}.state p{margin:0;color:var(--muted)}.state button,.state a{border:none;border-radius:999px;padding:10px 16px;background:var(--p);color:#fff;text-decoration:none;font-weight:700}.spinner{width:36px;height:36px;border:4px solid #dff2fc;border-top-color:var(--pd);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.hidden{display:none!important}
+@media(max-width:600px){.topbar{min-height:64px;padding:9px 11px}.topbar h1{font-size:17px}.container{padding:14px 10px 92px}.address-card{padding:14px}.address-head{flex-direction:column}.actions{display:grid;grid-template-columns:1fr 1fr}.card-button{width:100%}}
+</style>
+<link rel="stylesheet" href="theme.css?v=20260929-1">
+<link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
+</head>
+<body>
+<header class="topbar"><button type="button" onclick="goAddressBack()" aria-label="กลับ">←</button><h1>จัดการที่อยู่</h1><a href="account.html" aria-label="บัญชี">👤</a></header>
+<main class="container">
+<section class="hero"><h2>📍 ที่อยู่จัดส่ง</h2><p>เลือก แก้ไข หรือเพิ่มที่อยู่สำหรับคำสั่งซื้อของคุณ</p></section>
+<section id="addressList" class="state"><div class="spinner"></div><h2>กำลังโหลดที่อยู่</h2><p>รอสักครู่นะคะ</p></section>
+</main>
+<button class="add-btn" type="button" onclick="goAddAddress()">+ เพิ่มที่อยู่ใหม่</button>
+<script>
+const API="https://script.google.com/macros/s/AKfycbwpwT5sgetNYhEtGz9NMaaYcedgEgU_32udT0TjTIyKn99ZqmZFYggvGCBXiva-KeVx6Q/exec";
+const customer=safeJson(localStorage.getItem("customer"),{});
+const sessionToken=String(customer.session_token||localStorage.getItem("session_token")||"").trim();
+const params=new URLSearchParams(location.search);
+const selectType=params.get("select")||"";
+const orderId =
+  params.get("order_id") ||
+  params.get("id") ||
+  "";
+
+const shipmentId =
+  params.get("shipment_id") ||
+  "";
+
+let addressesData=[];
+document.addEventListener("DOMContentLoaded",()=>{if(!sessionToken){location.replace("login.html");return}loadAddresses()});
+
+async function loadAddresses(){
+
+  const box =
+    document.getElementById(
+      "addressList"
+    );
+
+
+  const cacheKey =
+    getAddressBookCacheKey();
+
+
+  /*
+  =========================================
+  LOCAL CACHE FIRST
+  =========================================
+  */
+
+  let cached = [];
+
+  try{
+
+    const raw =
+      JSON.parse(
+        localStorage.getItem(
+          cacheKey
+        ) || "[]"
+      );
+
+    cached =
+      Array.isArray(raw)
+        ? raw
+        : [];
+
+  }catch(error){
+
+    console.warn(
+      "อ่าน address cache ไม่สำเร็จ:",
+      error
+    );
+
+  }
+
+
+  if(cached.length){
+
+    addressesData =
+      cached;
+
+    renderAddresses(
+      cached
+    );
+
+  }else{
+
+    box.className =
+      "state";
+
+    box.innerHTML = `
+
+<div class="spinner"></div>
+
+<h2>
+กำลังโหลดที่อยู่
+</h2>
+
+<p>
+รอสักครู่นะคะ
+</p>
+
+`;
+
+  }
+
+
+  /*
+  =========================================
+  SERVER REFRESH
+  =========================================
+  */
+
+  try{
+
+    const q =
+      new URLSearchParams({
+        action:
+          "customerAddresses",
+        session_token:
+          sessionToken
+      });
+
+
+    const controller =
+      new AbortController();
+
+
+    const timer =
+      setTimeout(
+        ()=>{
+          controller.abort();
+        },
+        6000
+      );
+
+
+    const res =
+      await fetch(
+        API +
+        "?" +
+        q.toString(),
+        {
+          signal:
+            controller.signal
+        }
+      );
+
+
+    clearTimeout(
+      timer
+    );
+
+
+    if(!res.ok){
+
+      throw new Error(
+        "HTTP " +
+        res.status
+      );
+
+    }
+
+
+    const data =
+      await res.json();
+
+
+    if(
+      data &&
+      data.success === false
+    ){
+
+      throw new Error(
+        data.error ||
+        "กรุณาเข้าสู่ระบบใหม่"
+      );
+
+    }
+
+
+    const rows =
+      Array.isArray(data)
+        ? data
+        : Array.isArray(
+            data.addresses
+          )
+            ? data.addresses
+            : [];
+
+
+    addressesData =
+      rows;
+
+
+    localStorage.setItem(
+      cacheKey,
+      JSON.stringify(
+        rows
+      )
+    );
+
+
+    renderAddresses(
+      rows
+    );
+
+
+  }catch(error){
+
+    console.warn(
+      "loadAddresses refresh:",
+      error
+    );
+
+
+    /*
+    cache มีอยู่แล้ว
+    → อย่าทำลาย list ที่แสดงอยู่
+    */
+
+    if(cached.length){
+
+      return;
+
+    }
+
+
+    /*
+    ไม่มี cache
+    */
+
+    box.className =
+      "state";
+
+
+    box.innerHTML = `
+
+<div style="font-size:48px">
+⚠️
+</div>
+
+<h2>
+โหลดที่อยู่ช้ากว่าปกติ
+</h2>
+
+<p>
+สามารถเพิ่มที่อยู่ใหม่ได้ทันที
+หรือกดลองโหลดอีกครั้ง
+</p>
+
+<div
+style="
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+justify-content:center;
+"
+>
+
+  <button
+  onclick="loadAddresses()"
+  >
+    ลองใหม่
+  </button>
+
+  <button
+  onclick="goAddAddress()"
+  >
+    + เพิ่มที่อยู่ใหม่
+  </button>
+
+</div>
+
+`;
+
+  }
+
+}
+
+function getAddressBookCacheKey(){
+
+  const key =
+    String(
+      customer.customer_id ||
+      customer.email ||
+      "guest"
+    )
+      .trim()
+      .toLowerCase();
+
+
+  return (
+    "rinka_customer_addresses_" +
+    key
+  );
+
+}
+  
+function renderAddresses(rows){
+ const box=document.getElementById("addressList");
+ if(!rows.length){box.className="state";box.innerHTML='<div style="font-size:48px">📍</div><h2>ยังไม่มีที่อยู่</h2><p>เพิ่มที่อยู่เพื่อใช้สั่งซื้อสินค้า</p><button onclick="goAddAddress()">เพิ่มที่อยู่ใหม่</button>';return}
+ box.className="list";box.innerHTML=rows.map(addressHtml).join("");
+}
+function addressHtml(a){
+ const id=String(a.address_id||"");const isDefault=bool(a.is_default);
+ return `<article class="address-card"><div class="address-head"><div><div class="badges"><span class="label">${esc(a.label||"ที่อยู่")}</span>${isDefault?'<span class="label default">ค่าเริ่มต้น</span>':""}</div><div class="address-name">${esc(a.receiver||"-")}</div></div><span style="font-size:24px">📦</span></div>
+ <div class="line"><span>📞</span><span>${esc(a.phone||"-")}</span></div><div class="line"><span>📍</span><span>${esc([a.address,a.subdistrict,a.district,a.province,a.postcode].filter(Boolean).join(" "))}</span></div>
+ <div class="actions"><button class="card-button" onclick='editAddress(${JSON.stringify(id)})'>✏️ แก้ไข</button>${selectType?`<button class="card-button select-button" onclick='useAddressById(${JSON.stringify(id)})'>✅ ใช้ที่อยู่นี้</button>`:""}</div></article>`;
+}
+
+ function editAddress(id){
+
+  const q =
+    new URLSearchParams({
+      id
+    });
+
+  if(selectType){
+    q.set(
+      "return_select",
+      selectType
+    );
+  }
+
+  if(orderId){
+    q.set(
+      "order_id",
+      orderId
+    );
+  }
+
+  if(shipmentId){
+    q.set(
+      "shipment_id",
+      shipmentId
+    );
+  }
+
+  location.href =
+    "address.html?" +
+    q.toString();
+}
+ 
+function goAddAddress(){
+
+  const q =
+    new URLSearchParams();
+
+  if(selectType){
+    q.set(
+      "return_select",
+      selectType
+    );
+  }
+
+  if(orderId){
+    q.set(
+      "order_id",
+      orderId
+    );
+  }
+
+  if(shipmentId){
+    q.set(
+      "shipment_id",
+      shipmentId
+    );
+  }
+
+  location.href =
+    "address.html" +
+    (
+      q.toString()
+        ? "?" + q.toString()
+        : ""
+    );
+}
+ 
+function useAddressById(id){
+
+  const a =
+    addressesData.find(
+      x =>
+        String(
+          x.address_id || ""
+        ) ===
+        String(id)
+    );
+
+  if(!a){
+
+    console.error(
+      "ไม่พบข้อมูลที่อยู่"
+    );
+
+    loadAddresses();
+
+    return;
+  }
+
+  try{
+
+  localStorage.setItem(
+    getAddressBookCacheKey(),
+    JSON.stringify(
+      addressesData
+    )
+  );
+
+}catch(error){
+
+  console.warn(
+    "บันทึก address cache ไม่สำเร็จ:",
+    error
+  );
+
+}
+
+  if(
+    selectType ===
+    "shipping"
+  ){
+
+    localStorage.setItem(
+      "selectedShippingAddress",
+      JSON.stringify(a)
+    );
+
+    const q =
+      new URLSearchParams();
+
+    if(orderId){
+      q.set(
+        "id",
+        orderId
+      );
+    }
+
+    if(shipmentId){
+      q.set(
+        "shipment_id",
+        shipmentId
+      );
+    }
+
+    location.href =
+      "shipping-payment.html?" +
+      q.toString();
+
+    return;
+  }
+
+  localStorage.setItem(
+    "selectedCheckoutAddress",
+    JSON.stringify(a)
+  );
+
+  location.href =
+    "checkout.html";
+}
+ 
+function goAddressBack(){if(document.referrer&&document.referrer!==location.href)history.back();else location.href="account.html"}
+function bool(v){return v===true||v===1||["true","yes","1","default"].includes(String(v||"").toLowerCase())}
+function safeJson(v,f){try{return JSON.parse(v||"")}catch(e){return f}}
+function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+</script>
+<script src="theme.js?v=20260929-1"></script>
+</body>
+</html>

@@ -1,0 +1,2159 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>บัญชีของฉัน | Rinka Shop</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+<link rel="stylesheet" href="cart-drawer.css">
+
+<style>
+
+:root{
+  --account-primary:#7dcfff;
+  --account-primary-dark:#4ba5db;
+  --account-background:#f6fbff;
+  --account-card:#ffffff;
+  --account-text:#334155;
+  --account-muted:#64748b;
+  --account-border:#dbe7f1;
+  --account-danger:#dc2626;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:'Kodchasan',sans-serif;
+  color:var(--account-text);
+  background:
+    linear-gradient(
+      180deg,
+      #fbfdff 0%,
+      var(--account-background) 100%
+    );
+}
+
+button,
+a{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.page-header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  min-height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:11px 16px;
+  background:rgba(255,255,255,.94);
+  border-bottom:1px solid rgba(219,231,241,.95);
+  box-shadow:0 5px 18px rgba(71,85,105,.07);
+  backdrop-filter:blur(10px);
+}
+
+.page-header h1{
+  flex:1;
+  margin:0;
+  padding:0 12px;
+  text-align:center;
+  color:#3f6078;
+  font-size:20px;
+}
+
+.icon-btn{
+  width:46px !important;
+  height:46px;
+  padding:0 !important;
+  border:none;
+  border-radius:999px;
+  background:#fff;
+  color:var(--account-text);
+  font-size:25px;
+  box-shadow:0 4px 14px rgba(71,85,105,.10);
+}
+
+.cart-btn{
+  position:relative;
+  width:46px !important;
+  height:46px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  background:#fff;
+  text-decoration:none;
+  font-size:21px;
+  box-shadow:0 4px 14px rgba(71,85,105,.10);
+}
+
+#cartCount{
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  min-width:20px;
+  height:20px;
+  padding:0 5px;
+  border-radius:999px;
+  background:#ff5c7a;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  font-weight:700;
+}
+
+.account-container{
+  width:min(820px,100%);
+  margin:auto;
+  padding:22px 16px 48px;
+}
+
+.profile-card{
+  position:relative;
+  overflow:hidden;
+  padding:22px;
+  border:1px solid var(--account-border);
+  border-radius:23px;
+  background:
+    linear-gradient(
+      135deg,
+      #f4fbff,
+      #ffffff
+    );
+  box-shadow:0 10px 30px rgba(86,142,178,.10);
+}
+
+.profile-card::after{
+  content:"☁️";
+  position:absolute;
+  right:18px;
+  top:14px;
+  font-size:48px;
+  opacity:.12;
+}
+
+.profile-avatar{
+  width:72px;
+  height:72px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    linear-gradient(
+      135deg,
+      var(--avatar-color-start,#c7ecff),
+      var(--avatar-color-end,#82d1ff)
+    );
+  color:#ffffff;
+  font-size:30px;
+  font-weight:700;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  border:4px solid rgba(255,255,255,.92);
+  box-shadow:
+    0 8px 20px
+    rgba(72,153,204,.22);
+  user-select:none;
+}
+
+.profile-avatar-note{
+  margin-top:8px;
+  color:#7890a0;
+  font-size:11px;
+}
+
+.profile-avatar-wrap{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.profile-avatar{
+  overflow:hidden;
+}
+
+.profile-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.profile-avatar-actions{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
+}
+
+.profile-avatar-button{
+  min-height:40px;
+  padding:9px 14px;
+  border:1px solid #cde6f5;
+  border-radius:999px;
+  background:#eef8ff;
+  color:#3476a2;
+  font-weight:700;
+}
+
+.profile-avatar-file{
+  display:none;
+}
+
+.profile-avatar-preview{
+  margin-top:10px;
+  padding:12px;
+  border:1px solid #d7ebf7;
+  border-radius:14px;
+  background:#f8fcff;
+}
+
+.profile-avatar-preview.hidden{
+  display:none;
+}
+
+.profile-avatar-preview img{
+  width:90px;
+  height:90px;
+  object-fit:cover;
+  border-radius:999px;
+  border:3px solid #fff;
+  box-shadow:0 6px 18px rgba(72,153,204,.18);
+}
+
+.profile-avatar-preview-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.profile-avatar-save,
+.profile-avatar-cancel{
+  min-height:38px;
+  padding:8px 13px;
+  border:none;
+  border-radius:999px;
+  font-weight:700;
+}
+
+.profile-avatar-save{
+  background:linear-gradient(135deg,#7dcfff,#57b8ed);
+  color:#fff;
+}
+
+.profile-avatar-cancel{
+  background:#eef2f7;
+  color:#526777;
+}
+
+.profile-info{
+  margin-top:14px;
+}
+
+.profile-name{
+  font-size:24px;
+  font-weight:700;
+  color:#355a73;
+  overflow-wrap:anywhere;
+}
+
+.profile-email{
+  margin-top:5px;
+  color:var(--account-muted);
+  overflow-wrap:anywhere;
+}
+
+.profile-social{
+  margin-top:4px;
+  color:#4f7b99;
+  font-size:13px;
+}
+
+.account-section{
+  margin-top:20px;
+}
+
+.account-section h2{
+  margin:0 0 12px;
+  color:#3f6078;
+  font-size:18px;
+}
+
+.order-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px;
+}
+
+.order-summary-card{
+  min-height:112px;
+  padding:15px;
+  border:1px solid var(--account-border);
+  border-radius:17px;
+  background:#fff;
+  box-shadow:0 7px 20px rgba(86,142,178,.07);
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.order-summary-card:hover{
+  transform:translateY(-2px);
+  border-color:#9edcff;
+}
+
+.order-summary-icon{
+  font-size:25px;
+}
+
+.order-summary-label{
+  margin-top:8px;
+  color:#4f6d82;
+  font-size:13px;
+  font-weight:600;
+}
+
+.order-summary-count{
+  margin-top:4px;
+  color:#2563eb;
+  font-size:24px;
+  font-weight:700;
+}
+
+.account-menu{
+  display:grid;
+  gap:11px;
+}
+
+.menu-card{
+  min-height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:15px;
+  border:1px solid var(--account-border);
+  border-radius:17px;
+  background:#fff;
+  box-shadow:0 7px 20px rgba(86,142,178,.07);
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.menu-card:hover{
+  transform:translateY(-2px);
+  border-color:#a9ddf7;
+}
+
+.menu-card-main{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.menu-card-icon{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#edf8fe;
+  font-size:20px;
+}
+
+.menu-card-title{
+  font-weight:700;
+}
+
+.menu-card-subtitle{
+  margin-top:3px;
+  color:var(--account-muted);
+  font-size:12px;
+}
+
+.menu-card-arrow{
+  color:#94a3b8;
+  font-size:20px;
+}
+
+.account-loading,
+.account-error{
+  margin-top:16px;
+  padding:15px;
+  border-radius:15px;
+  text-align:center;
+}
+
+.account-loading{
+  background:#f8fbff;
+  color:var(--account-muted);
+  border:1px solid #e5eef5;
+}
+
+.account-error{
+  background:#fff1f2;
+  color:#9f1239;
+  border:1px solid #fecaca;
+}
+
+.account-error button{
+  margin-top:10px;
+  padding:8px 13px;
+  border:none;
+  border-radius:999px;
+  background:#be123c;
+  color:#fff;
+  font-weight:700;
+}
+
+.logout-btn{
+  width:100%;
+  min-height:49px;
+  margin-top:22px;
+  border:none;
+  border-radius:999px;
+  background:#fee2e2;
+  color:var(--account-danger);
+  font-weight:700;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:999;
+  background:rgba(0,0,0,.35);
+  opacity:1;
+  transition:.25s;
+}
+
+.overlay.hidden{
+  opacity:0;
+  pointer-events:none;
+}
+
+.side-menu{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:1000;
+  width:280px;
+  max-width:82%;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:#fff;
+  box-shadow:0 0 30px rgba(0,0,0,.15);
+  transform:translateX(-100%);
+  transition:.3s ease;
+}
+
+.side-menu.open{
+  transform:translateX(0);
+}
+
+.menu-header{
+  padding:24px;
+  border-bottom:1px solid #eee;
+}
+
+.side-menu a{
+  padding:18px 24px;
+  color:#333;
+  text-decoration:none;
+  font-size:16px;
+  font-weight:600;
+}
+
+.side-menu a:hover{
+  background:#f7f9ff;
+}
+
+.hidden{
+  display:none !important;
+}
+
+@media(max-width:600px){
+
+  .page-header{
+    min-height:64px;
+    padding:9px 11px;
+  }
+
+  .page-header h1{
+    font-size:17px;
+  }
+
+  .account-container{
+    padding:14px 10px 36px;
+  }
+
+  .profile-card{
+    padding:18px;
+    border-radius:19px;
+  }
+
+  .profile-name{
+    font-size:21px;
+  }
+
+  .order-summary-grid{
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+  }
+
+  .order-summary-card{
+    min-height:105px;
+    padding:13px;
+  }
+
+  .order-summary-count{
+    font-size:22px;
+  }
+
+}
+
+
+
+/* Rinka Points — Phase 1 */
+.points-card{
+  margin-top:18px;
+  padding:22px;
+  border-radius:20px;
+  background:var(--rk-surface, #fff);
+  border:1px solid var(--rk-border, #e9e9ef);
+  box-shadow:var(--rk-shadow-soft, 0 8px 24px rgba(0,0,0,.06));
+}
+.points-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}
+.points-title{font-size:18px;font-weight:700;}
+.points-balance{font-size:34px;font-weight:800;line-height:1.1;margin-top:8px;}
+.points-balance span{font-size:15px;font-weight:600;color:var(--rk-muted, #777);}
+.points-rate{font-size:13px;color:var(--rk-muted, #777);margin-top:6px;}
+.points-actions{margin-top:16px;padding-top:14px;border-top:1px solid var(--rk-border, #eee);}
+.points-history-link{width:100%;min-height:44px;display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--rk-border, #dbe7f1);border-radius:999px;background:var(--rk-surface-3, #eef8ff);color:var(--rk-link, #347fb4);text-decoration:none;font-weight:700;font-size:13px;}
+.points-history-link:active{transform:scale(.985);}
+
+</style>
+
+<link rel="stylesheet" href="theme.css?v=20260929-1">
+<link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
+</head>
+
+<body>
+
+<header class="page-header">
+
+<button
+id="menuButton"
+class="icon-btn"
+type="button"
+aria-label="เปิดเมนู">
+☰
+</button>
+
+<h1>
+บัญชีของฉัน
+</h1>
+
+<button
+type="button"
+class="cart-btn"
+onclick="openCartDrawer()"
+aria-label="เปิดตะกร้า"
+>
+  🛒
+  <span id="cartCount">0</span>
+</button>
+
+</header>
+
+<div
+id="overlay"
+class="overlay hidden">
+</div>
+
+<aside
+id="sideMenu"
+class="side-menu">
+
+<div class="menu-header">
+
+<h2>
+Rinka Shop
+</h2>
+
+</div>
+
+<a href="home.html">🏠 หน้าแรก</a>
+<a href="browse.html">🛍️ สินค้าทั้งหมด</a>
+<a href="categories.html">🏷️ หมวดสินค้า</a>
+<a href="lookup.html">📦 เช็กออเดอร์</a>
+<a href="help.html">🛟 ศูนย์ช่วยเหลือ</a>
+<a href="change-address.html">📍 เปลี่ยนที่อยู่</a>
+<a href="account.html">👤 บัญชีของฉัน</a>
+<a href="cart.html">🛒 ตะกร้า</a>
+<a
+href="https://x.com/prewithrinka"
+target="_blank"
+rel="noopener noreferrer">
+📞 ติดต่อร้าน
+</a>
+
+</aside>
+
+<main class="account-container">
+
+<section class="profile-card">
+
+<div class="profile-avatar-wrap">
+
+<div
+id="profileAvatar"
+class="profile-avatar"
+aria-label="รูปโปรไฟล์">
+R
+</div>
+
+<div class="profile-avatar-actions">
+
+<label
+for="profileAvatarFile"
+class="profile-avatar-button">
+📷 เปลี่ยนรูปโปรไฟล์
+</label>
+
+<input
+id="profileAvatarFile"
+class="profile-avatar-file"
+type="file"
+accept="image/jpeg,image/png,image/webp">
+
+<span class="profile-avatar-note">
+JPG, PNG หรือ WEBP ไม่เกิน 5 MB
+</span>
+
+</div>
+
+</div>
+
+<div
+id="profileAvatarPreview"
+class="profile-avatar-preview hidden">
+
+<img
+id="profileAvatarPreviewImage"
+alt="ตัวอย่างรูปโปรไฟล์">
+
+<div class="profile-avatar-preview-actions">
+
+<button
+id="profileAvatarSaveButton"
+type="button"
+class="profile-avatar-save"
+onclick="saveProfileAvatar()">
+บันทึกรูป
+</button>
+
+<button
+type="button"
+class="profile-avatar-cancel"
+onclick="cancelProfileAvatar()">
+ยกเลิก
+</button>
+
+</div>
+
+</div>
+
+<div class="profile-info">
+
+<div
+id="username"
+class="profile-name">
+-
+</div>
+
+<div
+id="email"
+class="profile-email">
+-
+</div>
+
+<div
+id="social"
+class="profile-social hidden">
+</div>
+
+</div>
+
+</section>
+
+<section class="points-card" aria-labelledby="rinkaPointsTitle">
+  <div class="points-head">
+    <div>
+      <div id="rinkaPointsTitle" class="points-title">⭐ Rinka Points</div>
+      <div id="rinkaPointsBalance" class="points-balance">— <span>แต้ม</span></div>
+      <div id="rinkaPointsRate" class="points-rate">กำลังโหลดข้อมูลแต้ม...</div>
+    </div>
+  </div>
+  <div class="points-actions">
+    <a class="points-history-link" href="points-history.html">ดูประวัติแต้ม <span aria-hidden="true">›</span></a>
+  </div>
+</section>
+
+<section class="account-section">
+
+<h2>
+คำสั่งซื้อของฉัน
+</h2>
+
+<div
+id="orderSummaryGrid"
+class="order-summary-grid">
+
+<div class="account-loading">
+กำลังโหลดข้อมูลออเดอร์...
+</div>
+
+</div>
+
+<div
+id="accountOrderError"
+class="account-error hidden">
+</div>
+
+</section>
+
+<section class="account-section">
+
+<h2>
+เมนูบัญชี
+</h2>
+
+<div class="account-menu">
+
+<div
+class="menu-card"
+onclick="window.location.href='orders.html'">
+
+<div class="menu-card-main">
+
+<div class="menu-card-icon">
+📦
+</div>
+
+<div>
+
+<div class="menu-card-title">
+รายการออเดอร์ทั้งหมด
+</div>
+
+<div class="menu-card-subtitle">
+ดูประวัติและติดตามสถานะ
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-card-arrow">
+›
+</div>
+
+</div>
+
+<div
+class="menu-card"
+onclick="window.location.href='legacy-orders.html'">
+
+<div class="menu-card-main">
+
+<div class="menu-card-icon">
+🗃️
+</div>
+
+<div>
+
+<div class="menu-card-title">
+ออเดอร์จากระบบเก่า
+</div>
+
+<div class="menu-card-subtitle">
+ดูรายการสั่งซื้อจากระบบเดิมของร้าน
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-card-arrow">
+›
+</div>
+
+</div>
+
+<div
+class="menu-card"
+onclick="window.location.href='address-book.html'">
+
+<div class="menu-card-main">
+
+<div class="menu-card-icon">
+📍
+</div>
+
+<div>
+
+<div class="menu-card-title">
+จัดการที่อยู่
+</div>
+
+<div class="menu-card-subtitle">
+เพิ่ม แก้ไข และเลือกที่อยู่จัดส่ง
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-card-arrow">
+›
+</div>
+
+</div>
+
+<div
+class="menu-card"
+onclick="window.location.href='help.html'">
+
+<div class="menu-card-main">
+
+<div class="menu-card-icon">
+🛟
+</div>
+
+<div>
+
+<div class="menu-card-title">
+ศูนย์ช่วยเหลือ
+</div>
+
+<div class="menu-card-subtitle">
+คำถามที่พบบ่อยและช่องทางติดต่อ
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-card-arrow">
+›
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<button
+class="logout-btn"
+type="button"
+onclick="logout()">
+ออกจากระบบ
+</button>
+
+</main>
+
+<script>
+
+const API =
+"https://script.google.com/macros/s/AKfycbwpwT5sgetNYhEtGz9NMaaYcedgEgU_32udT0TjTIyKn99ZqmZFYggvGCBXiva-KeVx6Q/exec";
+
+const customer =
+  safeAccountJson(
+    localStorage.getItem(
+      "customer"
+    ),
+    {}
+  );
+
+const sessionToken =
+  String(
+    customer.session_token ||
+    localStorage.getItem(
+      "session_token"
+    ) ||
+    ""
+  ).trim();
+
+document.addEventListener(
+  "DOMContentLoaded",
+  ()=>{
+
+    if(
+      !customer.email ||
+      !sessionToken
+    ){
+
+      window.location.href =
+        "login.html";
+
+      return;
+
+    }
+
+    renderAccountProfile();
+    renderAccountAvatar();
+    bindProfileAvatarUpload();
+    updateCartCount();
+    loadOrders();
+    loadRinkaPoints();
+
+  }
+);
+
+let selectedProfileAvatarFile = null;
+let selectedProfileAvatarPreviewUrl = "";
+
+function renderAccountAvatar(){
+
+  const avatar =
+    document.getElementById(
+      "profileAvatar"
+    );
+
+  if(!avatar){
+    return;
+  }
+
+  const avatarUrl =
+    String(
+      customer.avatar_url || ""
+    ).trim();
+
+  if(avatarUrl){
+
+    avatar.innerHTML = `
+
+<img
+src="${escapeAccountHtml(
+  normalizeCustomerAvatarUrl(
+    avatarUrl
+  )
+)}"
+alt="รูปโปรไฟล์"
+referrerpolicy="no-referrer"
+onerror="handleCustomerAvatarError(this)">
+
+`;
+
+    avatar.title =
+      customer.username ||
+      customer.customer_name ||
+      customer.email ||
+      "รูปโปรไฟล์";
+
+    return;
+
+  }
+
+  const displayName =
+    String(
+      customer.username ||
+      customer.customer_name ||
+      customer.email ||
+      "R"
+    ).trim();
+
+  const firstCharacter =
+    Array.from(
+      displayName
+    )
+      .find(
+        character=>
+          character.trim()
+      ) ||
+    "R";
+
+  avatar.textContent =
+    firstCharacter.toUpperCase();
+
+  const palette = [
+
+    ["#8fd8ff","#5caef2"],
+    ["#b8b5ff","#8583e8"],
+    ["#ffb8d2","#ec7fa8"],
+    ["#9be7d1","#54bda0"],
+    ["#ffd39f","#efa35d"],
+    ["#b6d7ff","#719fe7"]
+
+  ];
+
+  let hash = 0;
+
+  for(
+    const character of
+    displayName
+  ){
+
+    hash =
+      (
+        hash * 31 +
+        character.codePointAt(0)
+      ) >>> 0;
+
+  }
+
+  const selectedPalette =
+    palette[
+      hash %
+      palette.length
+    ];
+
+  avatar.style.setProperty(
+    "--avatar-color-start",
+    selectedPalette[0]
+  );
+
+  avatar.style.setProperty(
+    "--avatar-color-end",
+    selectedPalette[1]
+  );
+
+  avatar.title =
+    displayName;
+
+}
+
+
+function normalizeCustomerAvatarUrl(
+  url
+){
+
+  const value =
+    String(
+      url || ""
+    ).trim();
+
+  if(!value){
+    return "";
+  }
+
+  const idMatch =
+    value.match(
+      /(?:[?&]id=|\/d\/)([-\w]{20,})/
+    );
+
+  if(
+    idMatch &&
+    idMatch[1]
+  ){
+
+    return (
+      "https://drive.google.com/thumbnail?id=" +
+      encodeURIComponent(
+        idMatch[1]
+      ) +
+      "&sz=w1000"
+    );
+
+  }
+
+  return value;
+
+}
+
+
+function handleCustomerAvatarError(
+  image
+){
+
+  if(!image){
+    return;
+  }
+
+  const avatar =
+    document.getElementById(
+      "profileAvatar"
+    );
+
+  customer.avatar_url = "";
+
+  localStorage.setItem(
+    "customer",
+    JSON.stringify(
+      customer
+    )
+  );
+
+  if(avatar){
+
+    avatar.innerHTML = "";
+
+  }
+
+  renderAccountAvatar();
+
+  showAccountAvatarMessage(
+    "โหลดรูปโปรไฟล์ไม่สำเร็จ กรุณาอัปโหลดใหม่",
+    true
+  );
+
+}
+
+
+function bindProfileAvatarUpload(){
+
+  const input =
+    document.getElementById(
+      "profileAvatarFile"
+    );
+
+  if(!input){
+    return;
+  }
+
+  input.addEventListener(
+    "change",
+    handleProfileAvatarSelection
+  );
+
+}
+
+
+function handleProfileAvatarSelection(){
+
+  const input =
+    document.getElementById(
+      "profileAvatarFile"
+    );
+
+  const file =
+    input &&
+    input.files &&
+    input.files[0];
+
+  if(!file){
+
+    cancelProfileAvatar();
+
+    return;
+
+  }
+
+  try{
+
+    validateProfileAvatarFile(
+      file
+    );
+
+  }catch(error){
+
+    input.value = "";
+
+    showAccountAvatarMessage(
+      error.message ||
+      String(error),
+      true
+    );
+
+    return;
+
+  }
+
+  if(selectedProfileAvatarPreviewUrl){
+
+    URL.revokeObjectURL(
+      selectedProfileAvatarPreviewUrl
+    );
+
+  }
+
+  selectedProfileAvatarFile =
+    file;
+
+  selectedProfileAvatarPreviewUrl =
+    URL.createObjectURL(file);
+
+  document
+    .getElementById(
+      "profileAvatarPreviewImage"
+    )
+    .src =
+    selectedProfileAvatarPreviewUrl;
+
+  document
+    .getElementById(
+      "profileAvatarPreview"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+}
+
+
+function validateProfileAvatarFile(
+  file
+){
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if(
+    !file ||
+    !allowedTypes.includes(
+      file.type
+    )
+  ){
+
+    throw new Error(
+      "รองรับเฉพาะไฟล์ JPG, PNG หรือ WEBP"
+    );
+
+  }
+
+  if(
+    Number(file.size || 0) >
+    5 * 1024 * 1024
+  ){
+
+    throw new Error(
+      "ไฟล์รูปต้องมีขนาดไม่เกิน 5 MB"
+    );
+
+  }
+
+  return true;
+
+}
+
+
+async function saveProfileAvatar(){
+
+  if(!selectedProfileAvatarFile){
+
+    showAccountAvatarMessage(
+      "กรุณาเลือกรูปก่อน",
+      true
+    );
+
+    return;
+
+  }
+
+  const button =
+    document.getElementById(
+      "profileAvatarSaveButton"
+    );
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "กำลังอัปโหลด...";
+
+  try{
+
+    const imageBase64 =
+      await accountFileToBase64(
+        selectedProfileAvatarFile
+      );
+
+    const payload = {
+
+      session_token:
+        sessionToken,
+
+      image_base64:
+        imageBase64,
+
+      file_name:
+        selectedProfileAvatarFile.name,
+
+      mime_type:
+        selectedProfileAvatarFile.type
+
+    };
+
+    const formData =
+      new FormData();
+
+    formData.append(
+      "action",
+      "saveCustomerAvatar"
+    );
+
+    formData.append(
+      "payload",
+      JSON.stringify(
+        payload
+      )
+    );
+
+    const response =
+      await fetch(
+        API,
+        {
+          method:"POST",
+          body:formData
+        }
+      );
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP " +
+        response.status
+      );
+
+    }
+
+    const result =
+      await response.json();
+
+    if(
+      !result ||
+      result.success !== true
+    ){
+
+      throw new Error(
+        result &&
+        (
+          result.error ||
+          result.message
+        ) ||
+        "บันทึกรูปโปรไฟล์ไม่สำเร็จ"
+      );
+
+    }
+
+    customer.avatar_url =
+      result.avatar_url ||
+      "";
+
+    localStorage.setItem(
+      "customer",
+      JSON.stringify(
+        customer
+      )
+    );
+
+    renderAccountAvatar();
+
+    cancelProfileAvatar();
+
+    showAccountAvatarMessage(
+      "เปลี่ยนรูปโปรไฟล์เรียบร้อยแล้ว",
+      false
+    );
+
+  }catch(error){
+
+    console.error(
+      "saveProfileAvatar error:",
+      error
+    );
+
+    showAccountAvatarMessage(
+      error.message ||
+      "อัปโหลดรูปไม่สำเร็จ",
+      true
+    );
+
+  }finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "บันทึกรูป";
+
+  }
+
+}
+
+
+function cancelProfileAvatar(){
+
+  const input =
+    document.getElementById(
+      "profileAvatarFile"
+    );
+
+  const preview =
+    document.getElementById(
+      "profileAvatarPreview"
+    );
+
+  if(input){
+
+    input.value = "";
+
+  }
+
+  selectedProfileAvatarFile =
+    null;
+
+  if(selectedProfileAvatarPreviewUrl){
+
+    URL.revokeObjectURL(
+      selectedProfileAvatarPreviewUrl
+    );
+
+    selectedProfileAvatarPreviewUrl =
+      "";
+
+  }
+
+  preview.classList.add(
+    "hidden"
+  );
+
+}
+
+
+function accountFileToBase64(
+  file
+){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        ()=>resolve(
+          reader.result
+        );
+
+      reader.onerror =
+        ()=>reject(
+          new Error(
+            "อ่านไฟล์รูปไม่สำเร็จ"
+          )
+        );
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
+
+
+function showAccountAvatarMessage(
+  message,
+  isError
+){
+
+  if(
+    typeof showToast ===
+    "function"
+  ){
+
+    showToast(
+      message,
+      isError
+        ? "error"
+        : "success"
+    );
+
+    return;
+
+  }
+
+  const box =
+    document.getElementById(
+      "accountOrderError"
+    );
+
+  box.textContent =
+    message;
+
+  box.classList.toggle(
+    "hidden",
+    false
+  );
+
+  box.style.background =
+    isError
+      ? "#fff1f2"
+      : "#ecfdf5";
+
+  box.style.color =
+    isError
+      ? "#9f1239"
+      : "#166534";
+
+  setTimeout(
+    ()=>box.classList.add(
+      "hidden"
+    ),
+    2800
+  );
+
+}
+
+
+function renderAccountProfile(){
+
+  document
+    .getElementById(
+      "username"
+    )
+    .textContent =
+    customer.username ||
+    customer.customer_name ||
+    "สมาชิก Rinka Shop";
+
+  document
+    .getElementById(
+      "email"
+    )
+    .textContent =
+    customer.email ||
+    "-";
+
+  const social =
+    document.getElementById(
+      "social"
+    );
+
+  const socialText =
+    customer.twitter ||
+    customer.social ||
+    "";
+
+  if(socialText){
+
+    social.textContent =
+      socialText;
+
+    social.classList.remove(
+      "hidden"
+    );
+
+  }
+
+}
+
+async function loadOrders(){
+
+  const grid =
+    document.getElementById(
+      "orderSummaryGrid"
+    );
+
+  const errorBox =
+    document.getElementById(
+      "accountOrderError"
+    );
+
+  grid.innerHTML = `
+
+<div
+class="account-loading"
+style="grid-column:1/-1;"
+>
+กำลังโหลดข้อมูลออเดอร์...
+</div>
+
+`;
+
+  errorBox.classList.add(
+    "hidden"
+  );
+
+  try{
+
+    /*
+    =========================================
+    LOAD STORE SUMMARY + DM INVOICES
+    =========================================
+
+    - accountOrderSummary = Orders ปกติ + Legacy ตามระบบเดิม
+    - customerDMInvoices = DM Invoice ที่ผูกกับ account นี้
+    - นับเฉพาะ invoice_type = product เป็น "คำสั่งซื้อ"
+    - shipping invoice ไม่เอามาปนกับจำนวนออเดอร์สินค้า
+    =========================================
+    */
+
+    const summaryQuery =
+      new URLSearchParams();
+
+    summaryQuery.set(
+      "action",
+      "accountOrderSummary"
+    );
+
+    summaryQuery.set(
+      "session_token",
+      sessionToken
+    );
+
+    const dmQuery =
+      new URLSearchParams();
+
+    dmQuery.set(
+      "action",
+      "customerDMInvoices"
+    );
+
+    dmQuery.set(
+      "session_token",
+      sessionToken
+    );
+
+    const [
+      summaryResponse,
+      dmResponse
+    ] =
+      await Promise.all([
+        fetch(
+          API +
+          "?" +
+          summaryQuery.toString()
+        ),
+        fetch(
+          API +
+          "?" +
+          dmQuery.toString()
+        )
+      ]);
+
+    if(!summaryResponse.ok){
+
+      throw new Error(
+        "โหลดออเดอร์เว็บไซต์ไม่สำเร็จ: HTTP " +
+        summaryResponse.status
+      );
+
+    }
+
+    if(!dmResponse.ok){
+
+      throw new Error(
+        "โหลด DM Invoice ไม่สำเร็จ: HTTP " +
+        dmResponse.status
+      );
+
+    }
+
+    const [
+      result,
+      dmResult
+    ] =
+      await Promise.all([
+        summaryResponse.json(),
+        dmResponse.json()
+      ]);
+
+    if(
+      !result ||
+      result.success !== true
+    ){
+
+      throw new Error(
+        result?.error ||
+        "โหลดข้อมูลออเดอร์ไม่สำเร็จ"
+      );
+
+    }
+
+    if(
+      !dmResult ||
+      dmResult.success !== true
+    ){
+
+      throw new Error(
+        dmResult?.error ||
+        "โหลดข้อมูล DM Invoice ไม่สำเร็จ"
+      );
+
+    }
+
+    const counts = {
+
+      pending_order:
+        Number(
+          result.counts?.pending_order ||
+          0
+        ),
+
+      pending:
+        Number(
+          result.counts?.pending ||
+          0
+        ),
+
+      china_arrived:
+        Number(
+          result.counts?.china_arrived ||
+          0
+        ),
+
+      shipping_to_th:
+        Number(
+          result.counts?.shipping_to_th ||
+          0
+        ),
+
+      ready_to_ship:
+        Number(
+          result.counts?.ready_to_ship ||
+          0
+        ),
+
+      shipped:
+        Number(
+          result.counts?.shipped ||
+          0
+        )
+
+    };
+
+    const dmInvoices =
+      Array.isArray(
+        dmResult.orders
+      )
+        ? dmResult.orders
+        : (
+            Array.isArray(
+              dmResult.invoices
+            )
+              ? dmResult.invoices
+              : []
+          );
+
+    /*
+    =========================================
+    DM PRODUCT INVOICE → ACCOUNT STATUS
+    =========================================
+    */
+
+    const dmProductInvoices =
+      dmInvoices.filter(
+        invoice =>
+          String(
+            invoice.invoice_type ||
+            "product"
+          )
+            .trim()
+            .toLowerCase() ===
+          "product"
+      );
+
+    dmProductInvoices.forEach(
+      invoice => {
+
+        let status =
+          String(
+            invoice.status || ""
+          )
+            .trim()
+            .toLowerCase();
+
+        /*
+        Invoice ที่เพิ่งส่ง / ลูกค้าเพิ่งแจ้งชำระ
+        ยังถือว่าอยู่ช่วง "รอกดสั่งสินค้า"
+        จน Admin เปลี่ยนเป็น pending
+        */
+        if(
+          !status ||
+          status === "sent" ||
+          status === "payment_submitted"
+        ){
+
+          status =
+            "pending_order";
+
+        }
+
+        if(
+          Object.prototype.hasOwnProperty.call(
+            counts,
+            status
+          )
+        ){
+
+          counts[
+            status
+          ] += 1;
+
+        }
+
+      }
+    );
+
+    const dmProductTotal =
+      dmProductInvoices.length;
+
+    const total =
+      Number(
+        result.total || 0
+      ) +
+      dmProductTotal;
+
+    grid.innerHTML = [
+
+      createAccountOrderSummary(
+        "pending_order",
+        "🕒",
+        "รอกดสั่งสินค้า",
+        counts.pending_order
+      ),
+
+      createAccountOrderSummary(
+        "pending",
+        "📦",
+        "กดสั่งสินค้าแล้ว",
+        counts.pending
+      ),
+
+      createAccountOrderSummary(
+        "china_arrived",
+        "🏭",
+        "ถึงโกดังจีน",
+        counts.china_arrived
+      ),
+
+      createAccountOrderSummary(
+        "shipping_to_th",
+        "🚚",
+        "กำลังมาไทย",
+        counts.shipping_to_th
+      ),
+
+      createAccountOrderSummary(
+        "ready_to_ship",
+        "📬",
+        "เตรียมจัดส่ง",
+        counts.ready_to_ship
+      ),
+
+      createAccountOrderSummary(
+        "shipped",
+        "✅",
+        "จัดส่งแล้ว",
+        counts.shipped
+      ),
+
+      `
+
+<div
+class="order-summary-card"
+onclick="window.location.href='orders.html'"
+>
+
+<div class="order-summary-icon">
+📚
+</div>
+
+<div class="order-summary-label">
+ออเดอร์ทั้งหมด
+</div>
+
+<div class="order-summary-count">
+${Number(total || 0)}
+</div>
+
+</div>
+
+`
+
+    ].join("");
+
+    if(
+      result.legacy_warning
+    ){
+
+      console.warn(
+        "Legacy summary warning:",
+        result.legacy_warning
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "loadOrders error:",
+      error
+    );
+
+    grid.innerHTML =
+      "";
+
+    errorBox.innerHTML = `
+
+โหลดข้อมูลออเดอร์ไม่สำเร็จ
+
+<br>
+
+${escapeAccountHtml(
+  error.message ||
+  String(error)
+)}
+
+<br>
+
+<button
+type="button"
+onclick="loadOrders()"
+>
+ลองใหม่
+</button>
+
+`;
+
+    errorBox.classList.remove(
+      "hidden"
+    );
+
+  }
+
+}
+
+function createAccountOrderSummary(
+  status,
+  icon,
+  label,
+  count
+){
+
+  const url =
+    "orders.html?status=" +
+    encodeURIComponent(
+      status
+    );
+
+  return `
+
+<div
+class="order-summary-card"
+onclick='window.location.href=${JSON.stringify(url)}'>
+
+  <div class="order-summary-icon">
+    ${icon}
+  </div>
+
+  <div class="order-summary-label">
+    ${escapeAccountHtml(label)}
+  </div>
+
+  <div class="order-summary-count">
+    ${Number(count || 0)}
+  </div>
+
+</div>
+
+`;
+
+}
+
+function logout(){
+
+  const confirmed =
+    window.confirm(
+      "ออกจากระบบหรือไม่?"
+    );
+
+  if(!confirmed){
+    return;
+  }
+
+  localStorage.removeItem(
+    "customer"
+  );
+
+  localStorage.removeItem(
+    "session_token"
+  );
+
+  localStorage.removeItem(
+    "selectedCheckoutAddress"
+  );
+
+  localStorage.removeItem(
+    "checkoutAddress"
+  );
+
+  window.location.href =
+    "login.html";
+
+}
+
+function updateCartCount(){
+
+  let cart = [];
+
+  try{
+
+    const stored =
+      JSON.parse(
+        localStorage.getItem(
+          "cart"
+        ) || "[]"
+      );
+
+    cart =
+      Array.isArray(stored)
+        ? stored
+        : [];
+
+  }catch(error){
+
+    cart = [];
+
+  }
+
+  const count =
+    cart.reduce(
+      (sum,item)=>
+        sum +
+        Number(item.qty || 0),
+      0
+    );
+
+  const cartCount =
+    document.getElementById(
+      "cartCount"
+    );
+
+  if(cartCount){
+
+    cartCount.textContent =
+      count > 99
+        ? "99+"
+        : String(count);
+
+  }
+
+}
+
+function safeAccountJson(
+  value,
+  fallback
+){
+
+  try{
+
+    return JSON.parse(
+      value || ""
+    );
+
+  }catch(error){
+
+    return fallback;
+
+  }
+
+}
+
+async function loadRinkaPoints(){
+
+  const balanceBox = document.getElementById("rinkaPointsBalance");
+  const rateBox = document.getElementById("rinkaPointsRate");
+
+  try{
+    const query = new URLSearchParams();
+    query.set("action", "customerPoints");
+    query.set("session_token", sessionToken);
+
+    const response = await fetch(API + "?" + query.toString());
+    if(!response.ok){
+      throw new Error("HTTP " + response.status);
+    }
+
+    const result = await response.json();
+    if(!result || result.success !== true){
+      throw new Error(result?.error || "โหลดข้อมูลแต้มไม่สำเร็จ");
+    }
+
+    const balance = Number(result.balance || 0);
+    const rate = Number(result.baht_per_point || 100);
+    balanceBox.innerHTML = `${balance.toLocaleString("th-TH")} <span>แต้ม</span>`;
+    rateBox.textContent = `ทุก ${rate.toLocaleString("th-TH")} บาทของยอดสินค้า = 1 แต้ม`;
+
+  }catch(error){
+    console.error("loadRinkaPoints error:", error);
+    balanceBox.innerHTML = `0 <span>แต้ม</span>`;
+    rateBox.textContent = "ไม่สามารถโหลดข้อมูลแต้มได้ในขณะนี้";
+  }
+}
+
+
+function escapeAccountHtml(
+  value
+){
+
+  return String(
+    value ?? ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
+
+</script>
+
+<script src="toast.js"></script>
+<script src="menu.js"></script>
+
+<script src="js/maintenance-notice.js"></script>
+<script src="cart-drawer.js"></script>
+  
+<script src="ui.js"></script>
+
+<script src="theme.js?v=20260929-1"></script>
+</body>
+
+</html>

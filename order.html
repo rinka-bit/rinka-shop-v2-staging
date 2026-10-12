@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>รายละเอียดออเดอร์ | Rinka Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#7dcfff;--pd:#4ba5db;--bg:#f6fbff;--text:#334155;--muted:#64748b;--border:#dbe7f1}
+*{box-sizing:border-box}body{margin:0;font-family:'Kodchasan',sans-serif;background:linear-gradient(180deg,#fbfdff,var(--bg));color:var(--text)}button,a{font:inherit}
+.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;min-height:68px;padding:11px 16px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+.topbar button,.topbar a{width:46px;height:46px;border:none;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text);font-size:21px;box-shadow:0 4px 14px rgba(71,85,105,.1)}
+.topbar h1{margin:0;flex:1;text-align:center;font-size:20px;color:#3f6078}.container{width:min(980px,100%);margin:auto;padding:20px 16px 50px}.grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.7fr);gap:20px;align-items:start}
+.card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 8px 25px rgba(86,142,178,.08)}.summary{background:linear-gradient(135deg,#f8fcff,#eef8ff)}
+.summary h2{margin:0 0 10px;font-size:23px;color:#355a73}.badges{display:flex;flex-wrap:wrap;gap:7px}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700}.paid{background:#dcfce7;color:#166534}.pending{background:#fff7ed;color:#c2410c}.progress{background:#eff6ff;color:#1d4ed8}.ready{background:#fefce8;color:#a16207}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.meta div{padding:11px;border-radius:13px;background:#fff;border:1px solid #e8f0f5}.meta span{display:block;color:var(--muted);font-size:11px}.meta strong{display:block;margin-top:4px;overflow-wrap:anywhere}
+.timeline-step{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;min-height:55px}.timeline-dot{font-size:17px}.timeline-line{padding-bottom:15px;border-left:2px solid #cbd5e1;padding-left:13px;margin-left:-14px}.timeline-step.done .timeline-line{border-color:#22c55e}.timeline-step.done .timeline-line strong{color:#166534}
+.item{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid #edf2f6}.item:last-child{border-bottom:none}.item img,.ph{width:72px;height:72px;border-radius:12px;object-fit:cover;background:#edf7fc}.ph{display:flex;align-items:center;justify-content:center}.item h3{margin:0;font-size:14px;line-height:1.5}.opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.opt{padding:4px 8px;border-radius:999px;background:#eef8ff;color:#3f7194;font-size:11px}.item-meta{margin-top:7px;color:var(--muted);font-size:12px}.item-total{font-weight:700;color:#347fb4}
+.gift{display:flex;gap:11px;align-items:center;padding:10px;border:1px solid #e8eef3;border-radius:13px;margin-top:9px}.gift img,.gift .ph{width:58px;height:58px}
+.side{position:sticky;top:88px}.side-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;color:var(--muted);font-size:13px}.side-row strong{color:var(--text);text-align:right}.side-total{border-top:1px solid var(--border);margin-top:8px;padding-top:14px;font-size:18px}.side-total strong{font-size:25px;color:#2563eb}
+.action{width:100%;min-height:47px;border:none;border-radius:999px;margin-top:12px;background:linear-gradient(135deg,#7dcfff,#57b8ed);color:#fff;font-weight:700}.secondary{background:#eef8ff;color:#3476a2;border:1px solid #cce5f4}
+.message{padding:14px;border-radius:15px;margin-bottom:16px;line-height:1.7}.m-pending{background:#fff7ed;border:1px solid #fed7aa}.m-progress{background:#eff6ff;border:1px solid #bfdbfe}.m-ready{background:#fefce8;border:1px solid #fde68a}.m-done{background:#ecfdf5;border:1px solid #86efac}
+.state{min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;background:#fff;border:1px solid var(--border);border-radius:21px}.state p{margin:0;color:var(--muted)}.state button,.state a{border:none;border-radius:999px;padding:10px 17px;background:var(--p);color:#fff;text-decoration:none;font-weight:700}.spinner{width:36px;height:36px;border:4px solid #dff2fc;border-top-color:var(--pd);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:24px;z-index:2000;transform:translate(-50%,20px);opacity:0;transition:.2s;background:#18384e;color:#fff;padding:12px 16px;border-radius:14px}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.side{position:static}.container{padding:14px 10px 38px}.meta{grid-template-columns:1fr}.item{grid-template-columns:62px minmax(0,1fr)}.item img,.ph{width:62px;height:62px}.item-total{grid-column:2}.topbar h1{font-size:17px}}
+</style>
+<link rel="stylesheet" href="theme.css?v=20260919-1">
+<link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
+</head>
+<body>
+<header class="topbar">
+<button type="button" onclick="goOrderBack()" aria-label="กลับ">←</button>
+<h1>รายละเอียดออเดอร์</h1>
+<a href="home.html" aria-label="กลับหน้าแรก">🏠</a>
+</header>
+<main class="container"><section id="orderBox" class="state"><div class="spinner"></div><h2>กำลังโหลดออเดอร์</h2><p>รอสักครู่นะคะ</p></section></main>
+<div id="toast" class="toast"></div>
+<script>
+const API="https://script.google.com/macros/s/AKfycbwpwT5sgetNYhEtGz9NMaaYcedgEgU_32udT0TjTIyKn99ZqmZFYggvGCBXiva-KeVx6Q/exec";
+const orderId=new URLSearchParams(location.search).get("id");
+document.addEventListener(
+  "DOMContentLoaded",
+  ()=>{
+
+    loadOrder();
+
+  }
+);
+ 
+async function loadOrder(){
+
+  const box =
+    document.getElementById(
+      "orderBox"
+    );
+
+
+  const customer =
+    safeJson(
+      localStorage.getItem(
+        "customer"
+      ),
+      {}
+    );
+
+
+  const token =
+    String(
+      customer.session_token ||
+      localStorage.getItem(
+        "session_token"
+      ) ||
+      ""
+    ).trim();
+
+
+  if(!orderId){
+
+    state(
+      "ไม่พบเลขออเดอร์",
+      "ลิงก์นี้ไม่สมบูรณ์"
+    );
+
+    return;
+
+  }
+
+  /*
+  =========================================
+  DM INVOICE AS ORDER
+
+  หลังแอดมินเปลี่ยนเป็น pending ขึ้นไป
+  ให้แสดงในหน้ารายละเอียดออเดอร์นี้
+  โดยข้อมูลยังอยู่ใน DMInvoices ตามเดิม
+  =========================================
+  */
+
+  if(
+    String(
+      orderId || ""
+    ).startsWith(
+      "INV-"
+    )
+  ){
+
+    /*
+    DM Invoice ใช้ Invoice ID จากลิงก์เป็นตัวเปิดรายละเอียด
+    ไม่บังคับ Login เพื่อให้ลูกค้าที่เพิ่งแจ้งชำระเห็น Order ได้ทันที
+    */
+
+    const dmSnapshotKey =
+      "rinka_order_snapshot_" +
+      orderId;
+
+    let dmSnapshot =
+      null;
+
+
+    try{
+
+      dmSnapshot =
+        safeJson(
+          localStorage.getItem(
+            dmSnapshotKey
+          ),
+          null
+        );
+
+    }catch(snapshotError){
+
+      dmSnapshot =
+        null;
+
+    }
+
+
+    if(
+      dmSnapshot &&
+      String(
+        dmSnapshot.order_id || ""
+      ) ===
+      String(orderId)
+    ){
+
+      renderOrder(
+        dmSnapshot
+      );
+
+      console.log(
+        "ORDER SOURCE: dm_snapshot",
+        orderId
+      );
+
+    }
+
+
+    try{
+
+      const q =
+        new URLSearchParams({
+
+          action:
+            "dmInvoice",
+
+          invoice_id:
+            orderId
+
+        });
+
+
+      const res =
+        await fetch(
+          API +
+          "?" +
+          q.toString()
+        );
+
+
+      if(!res.ok){
+
+        throw new Error(
+          "HTTP " +
+          res.status
+        );
+
+      }
+
+
+      const data =
+        await res.json();
+
+
+      if(
+        !data ||
+        data.success !== true
+      ){
+
+        throw new Error(
+          data?.error ||
+          "โหลดข้อมูล DM Invoice ไม่สำเร็จ"
+        );
+
+      }
+
+
+      const invoice =
+        data.invoice || {};
+
+      const items =
+        Array.isArray(
+          data.items
+        )
+          ? data.items
+          : [];
+
+
+      const dmOrder = {
+
+        ...invoice,
+
+        order_id:
+          invoice.invoice_id ||
+          orderId,
+
+        order_source:
+          "dm_invoice",
+
+        customer_name:
+          invoice.receiver ||
+          "ลูกค้า",
+
+        items:
+          items.map(
+            item => ({
+
+              ...item,
+
+              name:
+                item.product_name ||
+                "สินค้า",
+
+              qty:
+                Number(
+                  item.quantity || 0
+                ),
+
+              price:
+                Number(
+                  item.unit_price || 0
+                ),
+
+              image:
+                item.image_url ||
+                item.image ||
+                "",
+
+              selected_option:
+                item.character_name
+                  ? {
+                      character:
+                        item.character_name
+                    }
+                  : {}
+
+            })
+          ),
+
+        payment_status:
+          String(
+            invoice.payment_status ||
+            ""
+          )
+            .trim()
+            .toLowerCase() ===
+              "submitted"
+            ? "processing"
+            : invoice.payment_status,
+
+        status:
+          invoice.status ||
+          (
+            String(
+              invoice.payment_status ||
+              ""
+            )
+              .trim()
+              .toLowerCase() ===
+                "submitted"
+              ? "payment_submitted"
+              : "sent"
+          ),
+
+        gifts:[],
+        shipments:[],
+        pending_shipment:null,
+        pending_shipment_id:"",
+        shipping_payment_status:""
+
+      };
+
+
+      try{
+
+        localStorage.setItem(
+          dmSnapshotKey,
+          JSON.stringify(
+            dmOrder
+          )
+        );
+
+      }catch(snapshotError){
+
+        console.warn(
+          "Save DM order snapshot failed:",
+          snapshotError
+        );
+
+      }
+
+
+      renderOrder(
+        dmOrder
+      );
+
+
+      console.log(
+        "ORDER SOURCE: dm_invoice_public",
+        orderId
+      );
+
+
+      return;
+
+
+    }catch(error){
+
+      console.warn(
+        "load public DM order:",
+        error
+      );
+
+
+      if(dmSnapshot){
+
+        return;
+
+      }
+
+
+      state(
+        "โหลดออเดอร์ไม่สำเร็จ",
+        error.message ||
+        String(error),
+        true
+      );
+
+
+      return;
+
+    }
+
+  }
+
+
+  /*
+  =========================================
+  LOCAL SNAPSHOT FIRST
+  =========================================
+  */
+
+  const snapshotKey =
+    "rinka_order_snapshot_" +
+    orderId;
+
+
+  let snapshot =
+    null;
+
+
+  try{
+
+    snapshot =
+      safeJson(
+        localStorage.getItem(
+          snapshotKey
+        ),
+        null
+      );
+
+
+  }catch(error){
+
+    snapshot =
+      null;
+
+  }
+
+
+  if(
+    snapshot &&
+    String(
+      snapshot.order_id || ""
+    ) ===
+    String(orderId)
+  ){
+
+    /*
+    แสดงทันที
+    ไม่รอ Apps Script
+    */
+
+    renderOrder(
+      snapshot
+    );
+
+
+    console.log(
+      "ORDER SOURCE: snapshot",
+      orderId
+    );
+
+  }
+
+
+  /*
+  Guest checkout:
+  หลังชำระเงิน payment.html สร้าง snapshot ไว้แล้ว
+  จึงเปิดรายละเอียดออเดอร์ได้ทันทีโดยไม่ต้อง Login
+  โดยไม่เปิด authenticated order endpoint เป็น public
+  */
+  if(
+    !token &&
+    snapshot
+  ){
+
+    return;
+
+  }
+
+
+  if(!token){
+
+    state(
+      "ไม่พบข้อมูลออเดอร์ในอุปกรณ์นี้",
+      "กรุณาใช้หน้าเช็กออเดอร์เพื่อค้นหาด้วย Twitter/X"
+    );
+
+    return;
+
+  }
+
+
+  /*
+  =========================================
+  SERVER REFRESH IN BACKGROUND
+  =========================================
+  */
+
+  try{
+
+    const q =
+      new URLSearchParams({
+
+        action:
+          "order",
+
+        id:
+          orderId,
+
+        session_token:
+          token
+
+      });
+
+
+    const res =
+      await fetch(
+        API +
+        "?" +
+        q.toString()
+      );
+
+
+    if(!res.ok){
+
+      throw new Error(
+        "HTTP " +
+        res.status
+      );
+
+    }
+
+
+    const data =
+      await res.json();
+
+
+    if(
+      !data ||
+      data.success !== true
+    ){
+
+      throw new Error(
+        data?.error ||
+        "ไม่พบออเดอร์"
+      );
+
+    }
+
+
+    const order =
+      data.order;
+
+
+    if(
+      !order ||
+      !order.order_id
+    ){
+
+      throw new Error(
+        "ข้อมูลออเดอร์ไม่สมบูรณ์"
+      );
+
+    }
+
+
+    /*
+    =========================================
+    UPDATE SNAPSHOT
+    =========================================
+    */
+
+    try{
+
+      localStorage.setItem(
+        snapshotKey,
+        JSON.stringify(
+          order
+        )
+      );
+
+    }catch(error){
+
+      console.warn(
+        "Save order snapshot failed:",
+        error
+      );
+
+    }
+
+
+    /*
+    render ข้อมูลจริงจาก backend
+    ทับ snapshot
+    */
+
+    renderOrder(
+      order
+    );
+
+
+    console.log(
+      "ORDER SOURCE: server",
+      orderId
+    );
+
+
+  }catch(error){
+
+    console.warn(
+      "loadOrder server refresh:",
+      error
+    );
+
+
+    /*
+    ถ้ามี snapshot อยู่แล้ว
+    ไม่ทำลายหน้าที่ลูกค้าเห็น
+    */
+
+    if(snapshot){
+
+      return;
+
+    }
+
+
+    state(
+      "โหลดออเดอร์ไม่สำเร็จ",
+      error.message ||
+      String(error),
+      true
+    );
+
+  }
+
+}
+ 
+function renderOrder(o){
+ const isDMOrder = String(o.order_source || o.source || o.order_type || "").toLowerCase() === "dm_invoice" || String(o.order_id || "").startsWith("INV-");
+ const items=Array.isArray(o.items)?o.items:[]; const gifts=Array.isArray(o.gifts)?o.gifts:[];
+ const shipments =
+  Array.isArray(
+    o.shipments
+  )
+    ? o.shipments
+    : [];
+ const pendingShipment =
+  o.pending_shipment &&
+  typeof o.pending_shipment ===
+  "object"
+    ? o.pending_shipment
+    : null;
+const pendingShipmentId =
+  String(
+    o.pending_shipment_id ||
+    pendingShipment?.shipment_id ||
+    ""
+  ).trim();
+ const importFee =
+  pendingShipment
+    ? Number(
+        pendingShipment.import_fee ||
+        0
+      )
+    : Number(
+        o.import_fee_round2 ??
+        o.import_fee ??
+        0
+      );
+const domestic =
+  pendingShipment
+    ? Number(
+        pendingShipment.domestic_shipping_fee ||
+        0
+      )
+    : Number(
+        o.domestic_shipping_fee ||
+        0
+      );
+ const shippingTotal=importFee+domestic;
+ document.getElementById("orderBox").className="";
+ document.getElementById("orderBox").innerHTML=`<div class="grid"><section>
+ <div class="card summary"><h2>📦 ${esc(o.order_id||"-")}</h2><div class="badges">${statusBadge(o.status)} ${
+  o.payment_status ===
+    "paid"
+
+    ? '<span class="badge paid">ชำระเงินแล้ว</span>'
+
+    : o.payment_status ===
+        "processing"
+
+      ? '<span class="badge progress">กำลังยืนยันการชำระเงิน</span>'
+
+      : '<span class="badge pending">รอชำระเงิน</span>'
+}
+${isDMOrder?'<span class="badge progress">💬 สั่งซื้อผ่าน DM</span>':shippingBadge(o.shipping_payment_status)}${gifts.length?`<span class="badge progress">ของแถม ${gifts.length} ชิ้น</span>`:""}${o.legacy_order?'<span class="badge progress">ออเดอร์เก่า</span>':""}</div>
+ <div class="meta"><div><span>ลูกค้า</span><strong>${esc(o.customer_name||"-")}</strong></div><div><span>วันที่สั่งซื้อ</span><strong>${formatDate(o.created_at)}</strong></div><div><span>สถานะ</span><strong>${statusText(o.status)}</strong></div><div><span>ยอดรวม</span><strong>฿${Number(o.total||0).toLocaleString("th-TH")}</strong></div>${o.preorder_round?`<div><span>รอบพรีออเดอร์</span><strong>${esc(o.preorder_round)}</strong></div>`:""}${o.import_fee_status?`<div><span>สถานะค่านำเข้า</span><strong>${o.import_fee_status==="pending"?"รอคำนวณ":"รวมแล้ว"}</strong></div>`:""}</div></div>
+ ${messageHtml(o.status)}<div class="card"><h2>📍 ติดตามสถานะ</h2>${timeline(o.status)}</div>
+ <div class="card"><h2>🛍️ รายการสินค้า</h2>${items.length?items.map(itemHtml).join(""):'<p>ไม่มีรายการสินค้า</p>'}</div>
+ ${gifts.length?`<div class="card"><h2>🎁 ของแถม</h2>${gifts.map(giftHtml).join("")}</div>`:""}
+ </section><aside class="side"><div class="card"><h2>${isDMOrder?"🧾 สรุปคำสั่งซื้อ":"🚚 การจัดส่ง"}</h2>
+ ${isDMOrder
+   ? `<div class="side-row"><span>ยอดสินค้า</span><strong>฿${Number(o.subtotal ?? o.total ?? 0).toLocaleString("th-TH")}</strong></div><div class="side-row side-total"><span>ยอดรวม</span><strong>฿${Number(o.total||0).toLocaleString("th-TH")}</strong></div>`
+   : `<div class="side-row"><span>ค่านำเข้า</span><strong>฿${importFee.toLocaleString("th-TH")}</strong></div><div class="side-row"><span>ค่าส่งในไทย</span><strong>฿${domestic.toLocaleString("th-TH")}</strong></div><div class="side-row side-total"><span>รวมค่าส่ง</span><strong>฿${shippingTotal.toLocaleString("th-TH")}</strong></div>`}
+${
+  !isDMOrder && pendingShipmentId
+    ? `
+
+<button
+class="action"
+onclick='location.href=${
+  JSON.stringify(
+    "shipping-payment.html?id=" +
+    encodeURIComponent(
+      o.order_id || ""
+    ) +
+    "&shipment_id=" +
+    encodeURIComponent(
+      pendingShipmentId
+    )
+  )
+}'
+>
+ยืนยันที่อยู่ / ชำระค่าส่ง
+</button>
+
+`
+    : ""
+}
+
+${shipmentTrackingHtml(
+  shipments,
+  o
+)}
+
+</aside>
+</div>
+`;
+
+}
+function itemHtml(i){const opts=i.selected_options||i.selected_option||{};const q=Number(i.qty||i.quantity||0);const unit=Number(i.price||i.unit_price||0);const total=Number(i.final_price)>0?Number(i.final_price):unit*q;return `<article class="item">${i.image?`<img src="${attr(i.image)}" alt="${attr(i.name||i.product_name||"")}">`:'<div class="ph">📦</div>'}<div><h3>${esc(i.name||i.product_name||"-")}</h3><div class="opts">${Object.entries(opts).map(([k,v])=>`<span class="opt">${esc(k)}: ${esc(Array.isArray(v)?v.join(", "):v)}</span>`).join("")}</div><div class="item-meta">${q} ชิ้น × ฿${unit.toLocaleString("th-TH")}</div></div><div class="item-total">฿${total.toLocaleString("th-TH")}</div></article>`}
+function giftHtml(g){return `<div class="gift">${g.gift_image?`<img src="${attr(g.gift_image)}" alt="${attr(g.gift_name||"")}">`:'<div class="ph">🎁</div>'}<div><strong>${esc(g.gift_name||"-")}</strong>${g.character_name?`<div style="margin-top:4px;color:var(--muted);font-size:12px">ตัวละคร: ${esc(g.character_name)}</div>`:""}</div></div>`}
+function statusText(s){
+
+  return {
+
+    pending_order:
+      "รอกดสั่งสินค้า",
+
+    pending:
+      "กดสั่งสินค้าแล้ว",
+
+    china_arrived:
+      "ถึงโกดังจีนแล้ว",
+
+    shipping_to_th:
+      "กำลังมาไทย",
+
+    ready_to_ship:
+      "เตรียมจัดส่ง",
+
+    shipped:
+      "จัดส่งแล้ว",
+
+    completed:
+      "เสร็จสิ้น"
+
+  }[s] || s || "-";
+
+}
+function statusBadge(s){
+
+  const c =
+    s === "pending_order"
+      ? "pending"
+
+      : s === "pending"
+        ? "progress"
+
+        : s === "ready_to_ship"
+          ? "ready"
+
+          : s === "shipped" ||
+            s === "completed"
+            ? "paid"
+
+            : "progress";
+
+  return `
+    <span class="badge ${c}">
+      ${statusText(s)}
+    </span>
+  `;
+
+}
+function shippingBadge(s){if(s==="paid")return '<span class="badge paid">ชำระค่าส่งแล้ว</span>';if(s==="combine_later")return '<span class="badge progress">รอส่งรวม</span>';return '<span class="badge pending">รอชำระค่าส่ง</span>'}
+function messageHtml(s){
+
+  const m = {
+
+    pending_order:[
+      "m-pending",
+      "🕒 ร้านได้รับออเดอร์แล้ว และกำลังรอกดสั่งสินค้าให้ค่ะ"
+    ],
+
+    pending:[
+      "m-progress",
+      "📦 ร้านกดสั่งสินค้าให้เรียบร้อยแล้ว"
+    ],
+
+    china_arrived:[
+      "m-progress",
+      "🏭 สินค้าถึงโกดังจีนแล้ว"
+    ],
+
+    shipping_to_th:[
+      "m-progress",
+      "🚚 สินค้ากำลังเดินทางมายังประเทศไทย"
+    ],
+
+    ready_to_ship:[
+  "m-ready",
+  "📬 มีสินค้าถึงไทยและพร้อมดำเนินการจัดส่ง กรุณาตรวจสอบรอบรายละเอียดด้านล่าง"
+],
+
+    shipped:[
+      "m-done",
+      "🎉 ร้านจัดส่งสินค้าเรียบร้อยแล้ว"
+    ]
+
+  }[s];
+
+  return m
+    ? `<div class="message ${m[0]}">${m[1]}</div>`
+    : "";
+
+}
+
+function timeline(current){
+
+  const steps = [
+
+    [
+      "pending_order",
+      "🕒",
+      "รอกดสั่งสินค้า"
+    ],
+
+    [
+      "pending",
+      "📦",
+      "กดสั่งสินค้าแล้ว"
+    ],
+
+    [
+      "china_arrived",
+      "🏭",
+      "ถึงโกดังจีน"
+    ],
+
+    [
+      "shipping_to_th",
+      "🚚",
+      "กำลังมาไทย"
+    ],
+
+    [
+      "ready_to_ship",
+      "📬",
+      "เตรียมจัดส่ง"
+    ],
+
+    [
+      "shipped",
+      "✅",
+      "จัดส่งแล้ว"
+    ]
+
+  ];
+
+  const idx =
+    steps.findIndex(
+      x =>
+        x[0] === current
+    );
+
+  return steps
+    .map(
+      (x,i) => `
+
+<div
+class="timeline-step ${
+  i <= idx
+    ? "done"
+    : ""
+}"
+>
+
+<div class="timeline-dot">
+
+${
+  i <= idx
+    ? "🟢"
+    : "⚪"
+}
+
+</div>
+
+<div class="timeline-line">
+
+<strong>
+${x[1]} ${x[2]}
+</strong>
+
+</div>
+
+</div>
+
+`
+    )
+    .join("");
+
+}
+
+ function shipmentTrackingHtml(
+  shipments,
+  order
+){
+
+  /*
+  =========================================
+  ระบบ Shipment ใหม่
+  =========================================
+  */
+
+  if(
+    Array.isArray(shipments) &&
+    shipments.length > 0
+  ){
+
+    /*
+    =========================================
+    แยก "รอส่งรวม"
+    =========================================
+    */
+
+    const waitingCombine =
+      shipments.filter(
+        shipment =>
+          String(
+            shipment.status || ""
+          )
+            .trim()
+            .toLowerCase() ===
+          "waiting_combine"
+      );
+
+
+    /*
+    =========================================
+    รอบจัดส่งจริง
+
+    waiting_combine ไม่นับเป็นรอบจัดส่ง
+    =========================================
+    */
+
+    const realShipments =
+      shipments.filter(
+        shipment =>
+          String(
+            shipment.status || ""
+          )
+            .trim()
+            .toLowerCase() !==
+          "waiting_combine"
+      );
+
+
+    /*
+    =========================================
+    Shipment ที่ส่งแล้ว
+
+    เลขรอบอิงจาก realShipments เท่านั้น
+    =========================================
+    */
+
+    const shipped =
+      realShipments
+        .map(
+          (
+            shipment,
+            index
+          ) => ({
+
+            ...shipment,
+
+            shipment_round:
+              index + 1
+
+          })
+        )
+        .filter(
+          shipment =>
+            String(
+              shipment.status || ""
+            )
+              .trim()
+              .toLowerCase() ===
+            "shipped"
+        );
+
+
+    let html = "";
+
+
+    /*
+    =========================================
+    สินค้าที่กำลังรอส่งรวม
+    =========================================
+    */
+
+    if(
+      waitingCombine.length > 0
+    ){
+
+      html += `
+
+        <div class="card">
+
+          <h2>
+            🕒 รอส่งรวม
+          </h2>
+
+          <div
+            style="
+              padding:12px;
+              border:1px solid #fde68a;
+              border-radius:13px;
+              background:#fffbeb;
+              color:#92400e;
+              line-height:1.7;
+            "
+          >
+
+            <strong>
+              📦 มีสินค้ากำลังรอรวมจัดส่ง
+            </strong>
+
+            <div
+              style="
+                margin-top:5px;
+                font-size:12px;
+              "
+            >
+              สินค้ารายการนี้จะถูกรวมกับสินค้าที่ถึงไทยในรอบถัดไป
+            </div>
+
+          </div>
+
+
+          ${waitingCombine
+            .map(
+              shipment => {
+
+                const items =
+                  Array.isArray(
+                    shipment.items
+                  )
+                    ? shipment.items
+                    : [];
+
+
+                if(
+                  items.length === 0
+                ){
+
+                  return "";
+
+                }
+
+
+                return `
+
+                  <div
+                    style="
+                      margin-top:12px;
+                      padding-top:10px;
+                      border-top:1px solid #edf2f6;
+                    "
+                  >
+
+                    ${items
+                      .map(
+                        item => {
+
+                          const name =
+                            String(
+                              item.name ||
+                              item.product_name ||
+                              "สินค้า"
+                            );
+
+
+                          const qty =
+                            Math.max(
+                              0,
+                              Number(
+                                item.qty ??
+                                item.quantity ??
+                                0
+                              )
+                            );
+
+
+                          return `
+
+                            <div
+                              style="
+                                display:flex;
+                                justify-content:space-between;
+                                gap:10px;
+                                padding:5px 0;
+                                font-size:13px;
+                              "
+                            >
+
+                              <span>
+                                ${esc(name)}
+                              </span>
+
+                              <strong>
+                                × ${qty}
+                              </strong>
+
+                            </div>
+
+                          `;
+
+                        }
+                      )
+                      .join("")}
+
+                  </div>
+
+                `;
+
+              }
+            )
+            .join("")}
+
+        </div>
+
+      `;
+
+    }
+
+
+    /*
+    =========================================
+    TRACKING
+    =========================================
+    */
+
+    if(
+      shipped.length === 0
+    ){
+
+      html += `
+
+        <div class="card">
+
+          <h2>
+            📮 การจัดส่ง
+          </h2>
+
+          <div
+            style="
+              color:var(--muted);
+              line-height:1.7;
+            "
+          >
+            ยังไม่มีเลขพัสดุ
+          </div>
+
+        </div>
+
+      `;
+
+
+      return html;
+
+    }
+
+
+    html += `
+
+      <div class="card">
+
+        <h2>
+          📮 การจัดส่ง
+        </h2>
+
+
+        ${shipped
+          .map(
+            (
+              shipment,
+              index
+            ) => {
+
+              const courier =
+                String(
+                  shipment.courier || ""
+                );
+
+
+              const tracking =
+                String(
+                  shipment.tracking_no || ""
+                );
+
+
+              const shipmentId =
+                String(
+                  shipment.shipment_id || ""
+                );
+
+
+              const items =
+                Array.isArray(
+                  shipment.items
+                )
+                  ? shipment.items
+                  : [];
+
+
+              /*
+              =====================================
+              รายการสินค้าในรอบที่จัดส่ง
+              =====================================
+              */
+
+              let itemsHtml = "";
+
+
+              if(items.length){
+
+                itemsHtml = `
+
+                  <div
+                    style="
+                      margin-top:12px;
+                      padding:10px 12px;
+                      border:1px solid #dcfce7;
+                      border-radius:11px;
+                      background:#f0fdf4;
+                    "
+                  >
+
+                    <div
+                      style="
+                        margin-bottom:7px;
+                        color:#166534;
+                        font-size:12px;
+                        font-weight:700;
+                      "
+                    >
+                      📦 สินค้าที่จัดส่งในรอบนี้
+                    </div>
+
+
+                    ${items
+                      .map(
+                        item => {
+
+                          const name =
+                            String(
+                              item.name ||
+                              item.product_name ||
+                              "สินค้า"
+                            );
+
+
+                          const qty =
+                            Math.max(
+                              0,
+                              Number(
+                                item.qty ??
+                                item.quantity ??
+                                0
+                              )
+                            );
+
+
+                          return `
+
+                            <div
+                              style="
+                                display:flex;
+                                justify-content:space-between;
+                                gap:10px;
+                                padding:5px 0;
+                                font-size:13px;
+                              "
+                            >
+
+                              <span>
+                                ${esc(name)}
+                              </span>
+
+                              <strong>
+                                × ${qty}
+                              </strong>
+
+                            </div>
+
+                          `;
+
+                        }
+                      )
+                      .join("")}
+
+                  </div>
+
+                `;
+
+              }
+
+
+              return `
+
+                <div
+                  style="
+                    padding:12px 0;
+                    ${
+                      index <
+                      shipped.length - 1
+                        ? "border-bottom:1px solid #edf2f6;"
+                        : ""
+                    }
+                  "
+                >
+
+                  <div
+                    style="
+                      display:flex;
+                      justify-content:space-between;
+                      gap:10px;
+                      align-items:center;
+                      flex-wrap:wrap;
+                    "
+                  >
+
+                    <strong>
+                      📦 รอบจัดส่ง ${
+                        shipment.shipment_round
+                      }
+                    </strong>
+
+
+                    <span
+                      class="badge paid"
+                    >
+                      จัดส่งแล้ว
+                    </span>
+
+                  </div>
+
+
+                  ${
+                    shipmentId
+                      ? `
+
+                        <div
+                          style="
+                            margin-top:5px;
+                            color:var(--muted);
+                            font-size:11px;
+                          "
+                        >
+                          ${esc(
+                            shipmentId
+                          )}
+                        </div>
+
+                      `
+                      : ""
+                  }
+
+
+                  ${itemsHtml}
+
+
+                  <div
+                    style="
+                      margin-top:12px;
+                      color:var(--muted);
+                      font-size:12px;
+                    "
+                  >
+                    บริษัทขนส่ง
+                  </div>
+
+
+                  <div
+                    style="
+                      margin-top:3px;
+                      font-weight:700;
+                    "
+                  >
+                    ${esc(
+                      courier || "-"
+                    )}
+                  </div>
+
+
+                  <div
+                    style="
+                      margin-top:10px;
+                      color:var(--muted);
+                      font-size:12px;
+                    "
+                  >
+                    เลขพัสดุ
+                  </div>
+
+
+                  <div
+                    style="
+                      margin-top:3px;
+                      font-weight:700;
+                      overflow-wrap:anywhere;
+                    "
+                  >
+                    ${esc(
+                      tracking || "-"
+                    )}
+                  </div>
+
+
+                  ${
+                    tracking
+                      ? `
+
+                        <button
+                          class="action secondary"
+                          onclick='copyText(
+                            ${JSON.stringify(
+                              tracking
+                            )}
+                          )'
+                        >
+                          คัดลอกเลขพัสดุ
+                        </button>
+
+
+                        <button
+                          class="action"
+                          onclick='openTracking(
+                            ${JSON.stringify(
+                              courier
+                            )},
+                            ${JSON.stringify(
+                              tracking
+                            )}
+                          )'
+                        >
+                          ติดตามพัสดุ
+                        </button>
+
+                      `
+                      : ""
+                  }
+
+                </div>
+
+              `;
+
+            }
+          )
+          .join("")}
+
+      </div>
+
+    `;
+
+
+    return html;
+
+  }
+
+
+  /*
+  =========================================
+  FALLBACK ระบบเก่า
+  =========================================
+  */
+
+  const oldTracking =
+    String(
+      order.tracking_no || ""
+    );
+
+
+  const oldCourier =
+    String(
+      order.courier || ""
+    );
+
+
+  return `
+
+    <div class="card">
+
+      <h2>
+        📮 เลขพัสดุ
+      </h2>
+
+
+      <div
+        style="
+          font-weight:700;
+          overflow-wrap:anywhere;
+        "
+      >
+        ${esc(
+          oldTracking ||
+          "ยังไม่มีเลขพัสดุ"
+        )}
+      </div>
+
+
+      ${
+        oldTracking
+          ? `
+
+            <button
+              class="action secondary"
+              onclick='copyText(
+                ${JSON.stringify(
+                  oldTracking
+                )}
+              )'
+            >
+              คัดลอกเลขพัสดุ
+            </button>
+
+
+            <button
+              class="action"
+              onclick='openTracking(
+                ${JSON.stringify(
+                  oldCourier
+                )},
+                ${JSON.stringify(
+                  oldTracking
+                )}
+              )'
+            >
+              ติดตามพัสดุ
+            </button>
+
+          `
+          : ""
+      }
+
+    </div>
+
+  `;
+
+}
+ 
+function openTracking(c,t){if(!t)return;const x=c.toLowerCase();let u=x.includes("flash")?"https://www.flashexpress.co.th/tracking/?se="+encodeURIComponent(t):x.includes("kerry")||x.includes("kex")?"https://th.kex-express.com/th/track/?track="+encodeURIComponent(t):x.includes("j&t")||x.includes("jnt")||x.includes("jt")?"https://www.jtexpress.co.th/index/query/gzquery.html?bills="+encodeURIComponent(t):x.includes("ไปรษณีย์")||x.includes("thaipost")||x.includes("ems")?"https://track.thailandpost.co.th/?trackNumber="+encodeURIComponent(t):"https://parcelsapp.com/en/tracking/"+encodeURIComponent(t);window.open(u,"_blank","noopener,noreferrer")}
+async function copyText(t){try{await navigator.clipboard.writeText(t);toast("คัดลอกเลขพัสดุแล้ว")}catch(e){toast("คัดลอกไม่สำเร็จ")}}
+function toast(t){const b=document.getElementById("toast");b.textContent=t;b.classList.add("show");setTimeout(()=>b.classList.remove("show"),1800)}
+function state(t,m,retry){const b=document.getElementById("orderBox");b.className="state";b.innerHTML=`<div style="font-size:50px">⚠️</div><h2>${esc(t)}</h2><p>${esc(m||"")}</p>${retry?'<button onclick="loadOrder()">ลองใหม่</button>':'<a href="orders.html">กลับไปรายการออเดอร์</a>'}`}
+function goOrderBack(){if(document.referrer&&document.referrer!==location.href)history.back();else location.href="orders.html"}
+function formatDate(v){if(!v)return "-";const d=new Date(v);return Number.isNaN(d.getTime())?"-":d.toLocaleDateString("th-TH",{year:"numeric",month:"short",day:"numeric"})}
+function safeJson(v,f){try{return JSON.parse(v||"")}catch(e){return f}}
+function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function attr(v){return esc(v)}
+</script>
+<script src="theme.js?v=20260919-1"></script>
+</body>
+</html>

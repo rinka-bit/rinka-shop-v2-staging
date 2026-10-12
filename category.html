@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>หมวดสินค้า | Rinka Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="cart-drawer.css">
+ <style>
+:root{--p:#7dcfff;--pd:#4ba5db;--bg:#f6fbff;--text:#334155;--muted:#64748b;--border:#dbe7f1}
+*{box-sizing:border-box}body{margin:0;font-family:'Kodchasan',sans-serif;color:var(--text);background:linear-gradient(180deg,#fbfdff,var(--bg))}
+button,input,a{font:inherit}.topbar{position:sticky;top:0;z-index:100;min-height:68px;display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+.topbar button,.topbar a{width:46px;height:46px;border:none;border-radius:999px;background:#fff;color:var(--text);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:21px;box-shadow:0 4px 14px rgba(71,85,105,.1)}.topbar h1{margin:0;flex:1;text-align:center;font-size:20px;color:#3f6078}
+.cart{position:relative}.count{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#ff5c7a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.container{width:min(1180px,100%);margin:auto;padding:20px 16px 46px}.hero{padding:20px;border:1px solid var(--border);border-radius:21px;background:linear-gradient(135deg,#f3fbff,#fff);box-shadow:0 9px 28px rgba(86,142,178,.09);margin-bottom:16px}.hero h2{margin:0;color:#355a73}.hero p{margin:8px 0 0;color:var(--muted)}
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;padding:12px;border:1px solid var(--border);border-radius:17px;background:#fff}.search{position:relative;flex:1}.search input{width:100%;min-height:45px;padding:10px 40px 10px 13px;border:1px solid #d7e3ec;border-radius:13px;outline:none}.search input:focus{border-color:var(--pd);box-shadow:0 0 0 3px rgba(125,207,255,.16)}.search button{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;border-radius:999px;background:#eef5f9;color:#526b7c}.result-count{color:var(--muted);font-size:13px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.card{overflow:hidden;border:1px solid var(--border);border-radius:18px;background:#fff;box-shadow:0 7px 22px rgba(86,142,178,.07);cursor:pointer;transition:.2s}.card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(86,142,178,.13)}.image{position:relative;aspect-ratio:1/1;background:#edf7fc;overflow:hidden}.image img{width:100%;height:100%;object-fit:cover;display:block;transition:.3s}.card:hover .image img{transform:scale(1.04)}.badges{position:absolute;top:9px;left:9px;right:9px;display:flex;justify-content:space-between;gap:7px}.badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:700}.new{background:#e0f2fe;color:#075985}.pre{background:#ffedd5;color:#9a3412}.stock{background:#dcfce7;color:#166534}.sale{background:#ffe4e6;color:#9f1239;margin-left:auto}.body{padding:12px}.body h3{margin:0;min-height:42px;font-size:14px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.fandom{margin-top:6px;color:var(--muted);font-size:12px}.price{margin-top:10px;font-size:18px;font-weight:700;color:#347fb4}.sale-price{color:#e84a68}.old{margin-left:6px;color:#94a3b8;font-size:12px;text-decoration:line-through}
+.state{min-height:330px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;border:1px solid var(--border);border-radius:20px;background:#fff}.state p{margin:0;color:var(--muted)}.state button,.state a{border:none;border-radius:999px;padding:10px 16px;background:var(--p);color:#fff;text-decoration:none;font-weight:700}.spinner{width:36px;height:36px;border:4px solid #dff2fc;border-top-color:var(--pd);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.hidden{display:none!important}
+@media(min-width:720px){.grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}}@media(max-width:600px){.topbar{min-height:64px;padding:9px 11px}.topbar h1{font-size:17px}.container{padding:14px 10px 36px}.hero{padding:17px}.toolbar{align-items:stretch;flex-direction:column}.result-count{padding-left:3px}}
+</style>
+<link rel="stylesheet" href="theme.css?v=20260918-2">
+<link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
+</head>
+<body>
+<header class="topbar"><button type="button" onclick="goBack()">←</button><h1 id="topTitle">หมวดสินค้า</h1>
+<button
+type="button"
+class="cart"
+onclick="openCartDrawer()"
+aria-label="เปิดตะกร้าสินค้า"
+>
+  🛒
+  <span id="cartCount" class="count">0</span>
+</button>
+</header>
+<main class="container">
+<section class="hero"><h2 id="categoryTitle">🏷️ กำลังโหลดหมวดสินค้า</h2><p id="categoryDescription">กำลังเตรียมรายการสินค้าให้ค่ะ</p></section>
+<div class="toolbar"><div class="search"><input id="categorySearch" type="search" placeholder="ค้นหาในหมวดนี้..." autocomplete="off"><button type="button" onclick="clearSearch()">✕</button></div><div id="productCount" class="result-count">0 รายการ</div></div>
+<section id="products" class="state"><div class="spinner"></div><h2>กำลังโหลดสินค้า</h2><p>รอสักครู่นะคะ</p></section>
+</main>
+<script>
+
+const category=new URLSearchParams(location.search).get("name")||"";
+let categoryProducts=[];
+document.addEventListener("DOMContentLoaded",()=>{updateCartCount();document.getElementById("categorySearch").addEventListener("input",filterCategoryProducts);loadProducts()});
+
+async function loadProducts(){
+
+  const box =
+    document.getElementById(
+      "products"
+    );
+
+
+  if(!category){
+
+    renderState(
+      "ไม่พบหมวดสินค้า",
+      "ลิงก์นี้ไม่สมบูรณ์"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const catalog =
+      await RinkaCatalog.load();
+
+
+    const rows =
+      Array.isArray(
+        catalog.products
+      )
+        ? catalog.products
+        : [];
+
+
+    categoryProducts =
+      rows.filter(
+        product =>
+          String(
+            product.main_category || ""
+          ).trim() ===
+          String(
+            category || ""
+          ).trim()
+      );
+
+
+    document
+      .getElementById(
+        "categoryTitle"
+      )
+      .textContent =
+        "🏷️ " +
+        category;
+
+
+    document
+      .getElementById(
+        "categoryDescription"
+      )
+      .textContent =
+        "สินค้าทั้งหมดในหมวด " +
+        category;
+
+
+    document
+      .getElementById(
+        "topTitle"
+      )
+      .textContent =
+        category;
+
+
+    document.title =
+      category +
+      " | Rinka Shop";
+
+
+    renderProducts(
+      categoryProducts
+    );
+
+
+    console.log(
+      "CATEGORY CATALOG:",
+      catalog.source,
+      categoryProducts.length,
+      "products"
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "loadProducts error:",
+      error
+    );
+
+
+    renderState(
+      "โหลดสินค้าไม่สำเร็จ",
+      error.message ||
+      String(error),
+      true
+    );
+
+  }
+
+}
+ 
+function filterCategoryProducts(){const q=document.getElementById("categorySearch").value.trim().toLowerCase();if(!q){renderProducts(categoryProducts);return}renderProducts(categoryProducts.filter(p=>[p.name,p.fandom,p.description,p.sub_category,p.search_keywords].join(" ").toLowerCase().includes(q)))}
+function clearSearch(){document.getElementById("categorySearch").value="";renderProducts(categoryProducts)}
+function renderProducts(rows){
+ const box=document.getElementById("products");document.getElementById("productCount").textContent=rows.length.toLocaleString("th-TH")+" รายการ";
+ if(!rows.length){renderState("ไม่พบสินค้า",document.getElementById("categorySearch").value?"ลองเปลี่ยนคำค้นดูนะคะ":"ยังไม่มีสินค้าในหมวดนี้");return}
+ box.className="grid";box.innerHTML=rows.map(productCard).join("");
+}
+function productCard(p){
+
+  const priceMode =
+    String(
+      p.price_mode ||
+      "fixed"
+    )
+      .trim()
+      .toLowerCase();
+
+
+  const price =
+    Number(
+      p.final_price ??
+      p.price ??
+      0
+    );
+
+
+  const minPrice =
+    Number(
+      p.min_price ??
+      price
+    );
+
+
+  const maxPrice =
+    Number(
+      p.max_price ??
+      minPrice
+    );
+
+
+  const old =
+    Number(
+      p.old_price ??
+      p.price ??
+      0
+    );
+
+
+  const onSale =
+    priceMode !== "option" &&
+    bool(
+      p.on_sale
+    );
+
+
+  const type =
+    String(
+      p.product_type ||
+      "preorder"
+    )
+      .toLowerCase();
+
+
+  const url =
+    "product.html?id=" +
+    encodeURIComponent(
+      p.product_id ||
+      ""
+    );
+
+
+  let priceHtml = "";
+
+
+  if(
+    priceMode ===
+    "option"
+  ){
+
+    priceHtml = `
+
+<div class="price">
+
+  ${
+    minPrice > 0 ||
+    maxPrice > 0
+      ? (
+          minPrice ===
+          maxPrice
+            ? `฿${minPrice.toLocaleString(
+                "th-TH"
+              )}`
+            : (
+                `฿${minPrice.toLocaleString(
+                  "th-TH"
+                )}` +
+                `–฿${maxPrice.toLocaleString(
+                  "th-TH"
+                )}`
+              )
+        )
+      : "รอกำหนดราคา"
+  }
+
+</div>
+
+`;
+
+  }else if(
+    onSale
+  ){
+
+    priceHtml = `
+
+<div class="price sale-price">
+
+  ฿${price.toLocaleString(
+    "th-TH"
+  )}
+
+  <span class="old">
+    ฿${old.toLocaleString(
+      "th-TH"
+    )}
+  </span>
+
+</div>
+
+`;
+
+  }else{
+
+    priceHtml = `
+
+<div class="price">
+
+  ฿${price.toLocaleString(
+    "th-TH"
+  )}
+
+</div>
+
+`;
+
+  }
+
+
+  return `
+
+<article
+class="card"
+tabindex="0"
+role="link"
+onclick='location.href=${JSON.stringify(url)}'
+onkeydown="cardKey(event,this)"
+>
+
+  <div class="image">
+
+    ${
+      p.image
+        ? `
+
+<img
+src="${esc(p.image)}"
+alt="${esc(p.name || "")}"
+loading="lazy"
+>
+
+`
+        : `
+
+<div
+style="
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+"
+>
+  ไม่มีรูป
+</div>
+
+`
+    }
+
+
+    <div class="badges">
+
+      <span
+      class="badge ${
+        type === "instock"
+          ? "stock"
+          : "pre"
+      }"
+      >
+
+        ${
+          type === "instock"
+            ? "พร้อมส่ง"
+            : "PREORDER"
+        }
+
+      </span>
+
+
+      ${
+        onSale
+          ? `
+
+<span class="badge sale">
+  SALE
+</span>
+
+`
+          : bool(
+              p.new_arrival
+            )
+            ? `
+
+<span class="badge new">
+  NEW
+</span>
+
+`
+            : ""
+      }
+
+    </div>
+
+  </div>
+
+
+  <div class="body">
+
+    <h3>
+      ${esc(
+        p.name ||
+        "-"
+      )}
+    </h3>
+
+
+    ${
+      p.fandom
+        ? `
+
+<div class="fandom">
+  ${esc(
+    p.fandom
+  )}
+</div>
+
+`
+        : ""
+    }
+
+
+    ${priceHtml}
+
+  </div>
+
+</article>
+
+`;
+
+}
+function renderState(t,m,retry){const b=document.getElementById("products");b.className="state";b.innerHTML=`<div style="font-size:48px">${retry?"⚠️":"📦"}</div><h2>${esc(t)}</h2><p>${esc(m)}</p>${retry?'<button onclick="loadProducts()">ลองใหม่</button>':'<a href="categories.html">ดูหมวดสินค้า</a>'}`}
+function cardKey(e,el){if(e.key==="Enter"||e.key===" "){e.preventDefault();el.click()}}
+function goBack(){if(document.referrer&&document.referrer!==location.href)history.back();else location.href="categories.html"}
+function updateCartCount(){let c=[];try{const x=JSON.parse(localStorage.getItem("cart")||"[]");c=Array.isArray(x)?x:[]}catch(e){}const n=c.reduce((s,i)=>s+Number(i.qty||0),0);document.getElementById("cartCount").textContent=n>99?"99+":String(n)}
+function bool(v){return v===true||v===1||["true","yes","1","active"].includes(String(v||"").toLowerCase())}function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+</script>
+
+<script src="components.js"></script>
+<script src="catalog.js?v=20260819-1"></script>
+<script src="cart-drawer.js"></script>
+ 
+<script src="theme.js?v=20260918-2"></script>
+</body>
+</html>
