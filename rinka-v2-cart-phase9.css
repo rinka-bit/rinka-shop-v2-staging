@@ -1,0 +1,62 @@
+/* Rinka Shop V2 · Phase 9 / Concept A · Cart presentation only.
+   No order calculations, localStorage, gift or checkout behavior changed. */
+:root{
+  --r9-accent:#64aee8;--r9-accent-strong:#438fce;
+  --r9-bg:#f5faff;--r9-card:#fff;--r9-ink:#345575;
+  --r9-muted:#7089a0;--r9-line:#dcebf7;
+}
+/* Cart drawer: softer header, clearer item hierarchy and primary checkout. */
+.cart-drawer{width:min(440px,96vw);background:var(--r9-card);color:var(--r9-ink);border-radius:22px 0 0 22px;overflow:hidden}
+.cart-drawer-header{min-height:72px;background:linear-gradient(125deg,#f7fcff,#eaf6ff);border-bottom:1px solid var(--r9-line);padding-left:20px;padding-right:16px}
+.cart-drawer-title{font-size:17px;color:var(--r9-ink)}
+.cart-drawer-title-count{background:#dcefff;color:#3777a9}
+.cart-drawer-close{border-radius:12px;background:#fff;color:#527b9c;border:1px solid var(--r9-line);transition:background .2s ease}
+.cart-drawer-close:hover{background:#dcefff}
+.cart-drawer-body{background:#fbfdff;padding:12px 16px}
+.cart-drawer-item{gap:14px;padding:17px 2px;border-color:#e5f0f9}
+.cart-drawer-image{border-radius:13px;overflow:hidden;background:#edf6fd}
+.cart-drawer-item-name{color:var(--r9-ink);line-height:1.5}
+.cart-drawer-options{color:var(--r9-muted)}
+.cart-drawer-price,.cart-drawer-line-total{color:var(--r9-accent-strong)}
+.cart-drawer-qty{border-radius:12px;overflow:hidden;border:1px solid var(--r9-line)}
+.cart-drawer-qty button{color:#417da9}
+.cart-drawer-remove{border-radius:10px}
+.cart-drawer-footer{padding:18px 20px max(20px,env(safe-area-inset-bottom));background:var(--r9-card);border-color:var(--r9-line)}
+.cart-drawer-summary-label{font-size:13px;color:var(--r9-muted)}
+.cart-drawer-summary-total{font-size:25px;color:var(--r9-accent-strong)}
+.cart-drawer-checkout{min-height:50px;border-radius:14px;background:linear-gradient(110deg,#76bdf1,#509cdd);box-shadow:0 7px 18px rgba(74,150,209,.2);transition:filter .2s ease,transform .2s ease}
+.cart-drawer-checkout:hover:not(:disabled){filter:brightness(.97);transform:translateY(-1px)}
+.cart-drawer-full-link{font-size:12px;color:#5182a9;margin-top:13px}
+/* Full cart: keep existing selection, quantity, gift and totals scripts intact. */
+body:has(.cart-page){background:var(--r9-bg);color:var(--r9-ink)}
+body:has(.cart-page) .page-header{background:rgba(255,255,255,.95);border-bottom:1px solid var(--r9-line);box-shadow:0 4px 18px rgba(55,111,160,.05)}
+body:has(.cart-page) .page-header h1{font-size:19px;color:var(--r9-ink)}
+body:has(.cart-page) .cart-page{max-width:1180px;margin-left:auto;margin-right:auto}
+body:has(.cart-page) .cart-main,body:has(.cart-page) .cart-summary{background:var(--r9-card);border:1px solid var(--r9-line);border-radius:20px;box-shadow:0 6px 26px rgba(54,118,163,.05)}
+body:has(.cart-page) .cart-toolbar{border-bottom-color:var(--r9-line)}
+body:has(.cart-page) .cart-item{border-color:var(--r9-line)}
+body:has(.cart-page) .cart-name{color:var(--r9-ink)}
+body:has(.cart-page) .cart-summary h2{color:var(--r9-ink)}
+body:has(.cart-page) .summary-total{border-color:var(--r9-line)}
+body:has(.cart-page) .checkout-btn,body:has(.cart-page) .cart-state-button{border-radius:14px;background:linear-gradient(110deg,#77bdf0,#4e9bda);box-shadow:0 7px 17px rgba(74,150,209,.17);color:#fff}
+body:has(.cart-page) .cart-state{background:#fff;border:1px solid var(--r9-line);border-radius:22px}
+/* Dark theme (the site uses data-theme, not system color queries). */
+html[data-theme="dark"]{
+  --r9-bg:#142436;--r9-card:#20374a;--r9-ink:#e2f2ff;
+  --r9-muted:#abc4d7;--r9-line:#3b5b74;--r9-accent-strong:#9cd4ff;
+}
+html[data-theme="dark"] .cart-drawer-header{background:linear-gradient(120deg,#213d55,#294962)}
+html[data-theme="dark"] .cart-drawer-body{background:#182e40}
+html[data-theme="dark"] .cart-drawer-close{background:#314e64;color:#e2f2ff}
+html[data-theme="dark"] .cart-drawer-image{background:#2d4a61}
+html[data-theme="dark"] .cart-drawer-footer{background:var(--r9-card)}
+html[data-theme="dark"] body:has(.cart-page) .page-header{background:#1d3447}
+html[data-theme="dark"] body:has(.cart-page) .cart-state{background:var(--r9-card)}
+@media(max-width:650px){
+  .cart-drawer{width:min(430px,100vw);border-radius:18px 0 0 18px}
+  .cart-drawer-header{min-height:65px}
+  .cart-drawer-body{padding:9px 13px}
+  .cart-drawer-footer{padding:15px 16px max(17px,env(safe-area-inset-bottom))}
+  body:has(.cart-page) .cart-main,body:has(.cart-page) .cart-summary{border-radius:16px}
+}
+@media(prefers-reduced-motion:reduce){.cart-drawer-checkout,.cart-drawer-close{transition:none}}
