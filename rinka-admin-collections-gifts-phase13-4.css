@@ -1,0 +1,40 @@
+/* Rinka Shop V2 staging — Phase 13.4: Collections & Gifts UI only.
+   Scoped selectors: no changes to visibility, JS event handling, or backend. */
+#tab_collections, #tab_gifts { max-width: 1320px; }
+#tab_collections .section-title, #tab_gifts .section-title { font-size: clamp(1.2rem,2vw,1.65rem); letter-spacing:-.025em; margin:0 0 18px; }
+#collectionManager, #giftManager { min-width:0; }
+#collectionManager .card, #giftManager .card { border-radius:16px; padding:clamp(14px,2vw,22px); margin-bottom:14px; }
+#collectionManager .product-form { grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); gap:12px; }
+#collectionManager .grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); gap:12px; }
+#collectionManager input, #collectionManager select, #collectionManager textarea,
+#giftManager input, #giftManager select, #giftManager textarea,
+#giftModal input, #giftModal select, #giftModal textarea { max-width:100%; box-sizing:border-box; }
+#collectionManager button, #giftManager button, #giftModal button { min-height:36px; border-radius:10px; font-size:.88rem; }
+#collectionManager img { max-width:100%; height:auto; object-fit:contain; border-radius:10px; }
+#collectionManager #collectionSearch { width:100%; max-width:460px; }
+/* Gift hierarchy: retain indentation and expand/collapse behavior. */
+#giftManager .gift-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+#giftManager .gift-tree { display:grid; gap:10px; min-width:0; }
+#giftManager .gift-tree-node { min-width:0; border-radius:13px; overflow-wrap:anywhere; }
+#giftManager .gift-tree-header { display:flex; align-items:center; flex-wrap:wrap; gap:10px; padding:11px 13px; }
+#giftManager .gift-tree-title { display:flex; align-items:center; gap:8px; min-width:0; flex:1 1 220px; }
+#giftManager .gift-tree-title-text { min-width:0; overflow-wrap:anywhere; font-size:.93rem; line-height:1.5; }
+#giftManager .gift-node-meta { font-size:.79rem; line-height:1.5; }
+#giftManager .gift-tree-actions { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-left:auto; }
+#giftManager .gift-action-btn { width:auto; padding:7px 10px; min-height:32px; font-size:.8rem; }
+#giftManager .gift-toggle-btn { flex-shrink:0; }
+#giftManager .gift-status { display:inline-flex; align-items:center; padding:3px 9px; border-radius:999px; font-size:.76rem; }
+#giftManager .gift-error, #giftManager .gift-empty, #giftManager .gift-loading { border-radius:12px; padding:14px; line-height:1.6; }
+/* Modal styles preserve inline backdrop behavior and existing .hidden toggle. */
+#giftModal > .card { width:min(100%,760px); box-sizing:border-box; border-radius:18px; padding:clamp(16px,3vw,26px); }
+#giftModal #giftModalTitle { font-size:1.15rem; }
+#giftModal #giftModalBody { gap:12px; }
+@media(max-width:650px) {
+  #tab_collections .section-title, #tab_gifts .section-title { margin-bottom:12px; }
+  #collectionManager .card, #giftManager .card { padding:13px; border-radius:13px; }
+  #giftManager .gift-tree-header { padding:10px; }
+  #giftManager .gift-tree-actions { width:100%; justify-content:flex-end; }
+  #giftManager .gift-tree-children { padding-left:10px; }
+  #giftModal { padding:10px !important; }
+  #giftModal > .card { margin:12px auto !important; }
+}
