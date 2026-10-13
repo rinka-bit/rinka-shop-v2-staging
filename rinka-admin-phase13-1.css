@@ -1,0 +1,39 @@
+/* Rinka Shop V2 — Phase 13.1 / Admin shell + Dashboard
+   Add after admin-v2.css. Does not modify JS or backend behavior. */
+:root{--r13-blue:#58b9ee;--r13-blue-soft:#eaf7ff;--r13-line:#dcebf6;--r13-shadow:0 8px 28px rgba(60,111,150,.075)}
+body{font-family:Kodchasan,system-ui,sans-serif;line-height:1.65}
+.admin-layout{min-width:0}
+.sidebar{width:256px;flex:0 0 256px;padding:24px 15px;background:#fff;border-right:1px solid var(--r13-line);overflow-y:auto;scrollbar-width:thin}
+.sidebar h2{font-size:20px;letter-spacing:-.4px;color:#35769d;padding:0 10px 16px;margin:0 0 15px;border-bottom:1px solid var(--r13-line)}
+.sidebar .nav-btn,.sidebar #nav_customer_lookup{display:flex;align-items:center;min-height:43px;width:100%;margin:3px 0;padding:10px 13px;border:1px solid transparent;border-radius:12px;background:transparent;color:#587187;text-align:left;font:700 13px/1.55 Kodchasan,system-ui,sans-serif;transition:background .16s,border-color .16s,color .16s}
+.sidebar .nav-btn:hover,.sidebar #nav_customer_lookup:hover{background:#f0f9ff;color:#286c9b;border-color:#e0f0fa}
+.sidebar .nav-btn.active,.sidebar #nav_customer_lookup.active{background:linear-gradient(120deg,#dff4ff,#edf9ff);color:#1c6b9c;border-color:#c8e9fc;box-shadow:inset 3px 0 0 #66c2f2}
+.sidebar .admin-theme-control{margin-top:20px;padding:15px 10px;border-top:1px solid var(--r13-line)}
+.sidebar .logout-btn{width:100%;background:#fff1f2;color:#be3e51;border:1px solid #ffe1e5}
+.main{min-width:0;max-width:1600px;margin:0 auto;padding:30px clamp(16px,3vw,42px) 60px}
+.main .topbar{margin-bottom:22px}
+.main h1,.main .section-title{font-size:clamp(22px,2.1vw,28px);font-weight:800;letter-spacing:-.5px;color:#2c607e;margin:0 0 23px}
+.main .topbar h1{margin:0}
+.card{border:1px solid var(--r13-line);border-radius:20px;padding:22px;box-shadow:var(--r13-shadow);background:#fff}
+.card h2{font-size:18px;margin:0 0 14px;color:#386b8c}
+#stats .grid{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}
+#stats .card{min-height:110px;margin:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;background:linear-gradient(160deg,#fff 60%,#f1faff);font-size:16px;font-weight:700;color:#416985}
+#stats .card strong{color:#236b9b}
+#stats .card button{margin-top:5px}
+#topProducts .card,#topFandoms .card{min-width:0}
+#topProducts .card p,#topFandoms .card p{border-bottom:1px solid #edf3f8;padding-bottom:10px;gap:12px}
+button{font-family:inherit}
+.main button:not(.gift-delete-btn):not(.logout-btn){border-radius:11px}
+input,select,textarea{font-family:inherit;min-height:42px;border-radius:11px}
+input[type=checkbox],input[type=radio]{min-height:0;width:auto;accent-color:#59baf0}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid #a8defa;outline-offset:2px}
+#loginBox{border:1px solid var(--r13-line);box-shadow:var(--r13-shadow);border-radius:22px}
+/* Dark mode overrides: keep the existing admin-theme.css as the source of truth. */
+html[data-theme=dark] .sidebar h2,html[data-theme=dark] .main h1,html[data-theme=dark] .main .section-title,html[data-theme=dark] .card h2{color:#e3f3ff}
+html[data-theme=dark] .sidebar h2,html[data-theme=dark] .sidebar .admin-theme-control{border-color:var(--rk-border)}
+html[data-theme=dark] .sidebar .nav-btn.active,html[data-theme=dark] .sidebar #nav_customer_lookup.active{background:#19415f!important;color:#bde8ff!important;border-color:#315c79!important;box-shadow:inset 3px 0 0 #69c5f7}
+html[data-theme=dark] #stats .card{background:var(--rk-surface)!important;color:var(--rk-text)!important}
+html[data-theme=dark] #topProducts .card p,html[data-theme=dark] #topFandoms .card p{border-color:var(--rk-border)}
+html[data-theme=dark] .sidebar .logout-btn{background:#422532!important;color:#ffc8d0!important;border-color:#633747!important}
+@media(max-width:900px){.sidebar{width:min(280px,84vw);flex:none;padding:22px 15px}.main{padding:74px 15px 30px}#stats .grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.card{padding:16px;border-radius:17px}#stats .grid{gap:10px}#stats .card{padding:15px;min-height:100px;font-size:13px}.main h1,.main .section-title{font-size:22px}}
