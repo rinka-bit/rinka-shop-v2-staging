@@ -1,0 +1,35 @@
+/* Rinka Shop V2 — Phase 10 | Checkout, Payment & Shipping UI only */
+:root{--r10-blue:#68bde9;--r10-ink:#31536a;--r10-border:#dcebf5;--r10-shadow:0 12px 34px rgba(70,128,171,.085)}
+body:has(.checkout-container),body:has(.payment-container),body:has(.container .layout #feeDetail){background:linear-gradient(155deg,#f4faff 0%,#fff 48%,#f1f9ff 100%);min-height:100vh}
+.checkout-container,.payment-container,body:has(#feeDetail)>.container{width:min(1100px,100%);margin-inline:auto}
+.checkout-topbar,.payment-topbar,body:has(#feeDetail) .topbar{box-shadow:0 4px 22px rgba(74,130,169,.065);border-bottom:1px solid var(--r10-border)}
+.checkout-topbar h1,.payment-topbar h1,body:has(#feeDetail) .topbar h1{font-weight:700;letter-spacing:-.025em}
+.checkout-card,.payment-card,.checkout-summary,.payment-summary,body:has(#feeDetail) .card{border:1px solid var(--r10-border)!important;border-radius:22px!important;box-shadow:var(--r10-shadow)!important;background:#fff!important}
+.checkout-card,.payment-card,body:has(#feeDetail) .card{transition:border-color .2s,box-shadow .2s}
+.checkout-card h2,.payment-card h2,.checkout-summary h2,.payment-summary h2,body:has(#feeDetail) .card h2{color:var(--r10-ink);letter-spacing:-.025em}
+.checkout-card-header,.payment-card>h2{margin-bottom:12px}
+.checkout-card-note,.payment-section-note{line-height:1.75}
+.checkout-summary,.payment-summary,body:has(#feeDetail) .side{align-self:start}
+.checkout-total-row,.payment-summary-total,body:has(#feeDetail) .fee-total{border-top:1px dashed #cbdfea;padding-top:17px;margin-top:14px}
+.checkout-payment-button,.payment-submit,body:has(#feeDetail) .submit{min-height:52px;border:0;border-radius:15px!important;background:linear-gradient(135deg,#77cdf2,#4da9df)!important;color:#fff!important;font-weight:700;box-shadow:0 7px 16px rgba(72,166,220,.2);transition:transform .15s,filter .15s}
+.checkout-payment-button:not(:disabled):hover,.payment-submit:not(:disabled):hover,body:has(#feeDetail) .submit:not(:disabled):hover{transform:translateY(-1px);filter:brightness(.97)}
+.checkout-payment-button:disabled,.payment-submit:disabled,body:has(#feeDetail) .submit:disabled{box-shadow:none}
+.payment-slip-drop,body:has(#feeDetail) .slip-drop{border:2px dashed #b5d9ee!important;border-radius:19px!important;background:#f7fcff!important;transition:background .2s,border-color .2s}
+.payment-slip-drop:hover,body:has(#feeDetail) .slip-drop:hover{background:#eff9ff!important;border-color:#73bde6!important}
+.payment-bank-list,.bank-list{gap:10px}
+body:has(#feeDetail) .option-card,body:has(#feeDetail) .bank-card{border-radius:16px;transition:background .2s,border-color .2s}
+body:has(#feeDetail) .option-card:has(input:checked),body:has(#feeDetail) .bank-card:has(input:checked){background:#ecf8ff;border-color:#65b9e5;box-shadow:0 0 0 2px rgba(103,185,229,.1)}
+body:has(#feeDetail) .note{background:#eef8ff;color:#315f81}
+.checkout-container :focus-visible,.payment-container :focus-visible,body:has(#feeDetail) .container :focus-visible{outline:3px solid #69b7e9;outline-offset:3px}
+@media(min-width:820px){.checkout-summary,.payment-summary,body:has(#feeDetail) .side{position:sticky;top:92px}}
+@media(max-width:819px){.checkout-layout,.payment-layout,body:has(#feeDetail) .layout{grid-template-columns:minmax(0,1fr)!important}.checkout-summary,.payment-summary,body:has(#feeDetail) .side{position:static!important}}
+@media(max-width:600px){.checkout-container,.payment-container,body:has(#feeDetail)>.container{padding-inline:12px!important;padding-bottom:110px!important}.checkout-card,.payment-card,.checkout-summary,.payment-summary,body:has(#feeDetail) .card{border-radius:18px!important}.checkout-card,.payment-card,body:has(#feeDetail) .card{padding:16px!important}.checkout-topbar h1,.payment-topbar h1{font-size:17px}.checkout-payment-button,.payment-submit,body:has(#feeDetail) .submit{min-height:52px}}
+/* Dark theme: respect existing theme tokens while preserving contrast. */
+html[data-theme="dark"] body:has(.checkout-container),html[data-theme="dark"] body:has(.payment-container),html[data-theme="dark"] body:has(.container .layout #feeDetail){background:linear-gradient(155deg,#111d2a,#172636)}
+html[data-theme="dark"] .checkout-card,html[data-theme="dark"] .payment-card,html[data-theme="dark"] .checkout-summary,html[data-theme="dark"] .payment-summary,html[data-theme="dark"] body:has(#feeDetail) .card{background:#1c2c3d!important;border-color:#35495d!important;box-shadow:0 12px 32px rgba(0,0,0,.15)!important;color:#e5eff9}
+html[data-theme="dark"] .checkout-card h2,html[data-theme="dark"] .payment-card h2,html[data-theme="dark"] .checkout-summary h2,html[data-theme="dark"] .payment-summary h2,html[data-theme="dark"] body:has(#feeDetail) .card h2{color:#e8f5ff}
+html[data-theme="dark"] .payment-slip-drop,html[data-theme="dark"] body:has(#feeDetail) .slip-drop{background:#21374b!important;border-color:#4c6880!important;color:#e5eff9}
+html[data-theme="dark"] body:has(#feeDetail) .option-card,html[data-theme="dark"] body:has(#feeDetail) .bank-card{background:#24374a;color:#e5eff9;border-color:#40566c}
+html[data-theme="dark"] body:has(#feeDetail) .option-card:has(input:checked),html[data-theme="dark"] body:has(#feeDetail) .bank-card:has(input:checked){background:#23435b;border-color:#78c6f0}
+html[data-theme="dark"] body:has(#feeDetail) .note{background:#253d55;color:#cbe9ff}
+@media(prefers-reduced-motion:reduce){.checkout-card,.payment-card,.checkout-payment-button,.payment-submit{transition:none!important}}
