@@ -1,0 +1,26 @@
+/* Rinka Shop V2 | Phase 13.3 Order Manager | presentation-only overlay
+   Scoped to active and shipped orders. No JS, status, or data changes. */
+#tab_orders,#tab_shipped_orders{min-width:0;--ord-line:#dbe8f2;--ord-soft:#f3f9fd;--ord-ink:#334155}
+#tab_orders .section-title,#tab_shipped_orders .section-title{font-size:clamp(19px,2vw,24px);letter-spacing:-.025em;margin:0 0 16px}
+#orders,#shippedOrders{min-width:0}
+#orders>.card,#shippedOrders>.card{border-radius:17px;margin-bottom:13px;padding:14px 16px}
+/* Status filter bar: keep all original inline onclick handlers intact. */
+#orders>.card[style*="flex-wrap"]{display:flex!important;align-items:center!important;gap:7px!important;padding:11px!important;position:relative}
+#orders>.card[style*="flex-wrap"]>button{flex:0 0 auto;width:auto!important;min-height:36px;padding:8px 11px!important;border-radius:999px!important;font-size:12px!important;line-height:1.4!important;box-shadow:none!important;white-space:normal}
+#orders>.card[style*="flex-wrap"]>button:focus-visible{outline:3px solid #8ad5ff;outline-offset:2px}
+/* Cards: reduce oversized whitespace while preserving existing controls. */
+#orders .order-card,#shippedOrders .order-card{min-width:0;margin:0 0 12px;padding:clamp(13px,1.7vw,19px);border-radius:16px;border:1px solid var(--ord-line);box-shadow:0 2px 10px rgba(38,90,132,.045);overflow-wrap:anywhere}
+#orders .order-card>div:first-child,#shippedOrders .order-card>div:first-child{gap:10px!important}
+#orders .order-card h3,#shippedOrders .order-card h3{font-size:14px;line-height:1.5;letter-spacing:-.015em;margin:0 0 7px!important;overflow-wrap:anywhere}
+#orders .order-card p,#shippedOrders .order-card p{line-height:1.55}
+#orders .order-card button,#shippedOrders .order-card button{width:auto;max-width:100%;min-height:34px;padding:8px 12px;font-size:12px;line-height:1.4;border-radius:10px}
+#orders .order-card input:not([type=checkbox]):not([type=radio]),#orders .order-card select,#orders .order-card textarea,#shippedOrders .order-card input:not([type=checkbox]):not([type=radio]),#shippedOrders .order-card select,#shippedOrders .order-card textarea{box-sizing:border-box;min-width:0;max-width:100%;border-radius:10px;font-size:13px;padding:9px 11px}
+#orders .order-card select,#shippedOrders .order-card select{cursor:pointer}
+#orders .order-card img,#shippedOrders .order-card img{max-width:100%;object-fit:contain}
+#orders .order-card [style*="overflow-x:auto"],#shippedOrders .order-card [style*="overflow-x:auto"]{max-width:100%}
+#orders .warning-card,#shippedOrders .warning-card{border-radius:12px;padding:12px 14px;font-size:13px}
+/* Theme variables are inherited from existing admin-theme.css. */
+html[data-theme="dark"] #tab_orders,html[data-theme="dark"] #tab_shipped_orders{--ord-line:var(--rk-border,#35475b);--ord-soft:var(--rk-surface-2,#1d2d3e);--ord-ink:var(--rk-text,#e6edf5)}
+html[data-theme="dark"] #orders .order-card,html[data-theme="dark"] #shippedOrders .order-card{background:var(--rk-surface,#1b2939)!important;color:var(--rk-text,#e6edf5)!important;border-color:var(--ord-line)!important}
+html[data-theme="dark"] #orders .order-card input,html[data-theme="dark"] #orders .order-card select,html[data-theme="dark"] #orders .order-card textarea,html[data-theme="dark"] #shippedOrders .order-card input,html[data-theme="dark"] #shippedOrders .order-card select,html[data-theme="dark"] #shippedOrders .order-card textarea{background:var(--rk-input,#25364a)!important;color:var(--rk-text,#e6edf5)!important;border-color:var(--ord-line)!important}
+@media(max-width:680px){#orders>.card,#shippedOrders>.card{padding:11px}#orders>.card[style*="flex-wrap"]{gap:6px!important}#orders>.card[style*="flex-wrap"]>button{padding:7px 9px!important;font-size:11px!important}#orders .order-card,#shippedOrders .order-card{padding:12px;margin-bottom:10px}#orders .order-card h3,#shippedOrders .order-card h3{font-size:13px}#orders .order-card button,#shippedOrders .order-card button{font-size:11px;padding:7px 9px}}
