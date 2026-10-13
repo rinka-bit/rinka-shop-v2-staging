@@ -1,0 +1,70 @@
+/* Rinka Shop V2 · Phase 11 · Presentation only
+   Account / Orders / Order detail / Lookup. No JS or API changes. */
+:root{--r11-blue:#6cbbea;--r11-blue-deep:#2879aa;--r11-line:#dceaf4;--r11-shadow:0 10px 32px rgba(58,116,160,.09)}
+body:has(.account-container),body:has(#orderList),body:has(#orderBox),body:has(#lookupFilters){font-family:'Kodchasan',sans-serif;letter-spacing:.005em}
+:is(.page-header,.topbar){backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+/* Account */
+.account-container{width:min(1040px,100%);margin-inline:auto}
+.account-container :is(.profile-card,.points-card,.account-section){border-radius:22px;box-shadow:var(--r11-shadow)}
+.account-container .profile-card{border:1px solid var(--r11-line)}
+.account-container .order-summary-grid{gap:10px}
+.account-container .order-summary-card{border-radius:17px;transition:background .18s,transform .18s}
+.account-container .order-summary-card:hover{background:rgba(108,187,234,.13)}
+.account-container .order-summary-icon{border-radius:16px;background:#e8f6ff;color:#327eac}
+.account-container .order-summary-all{color:var(--r11-blue-deep)}
+.account-container .menu-card{border-radius:17px}
+/* Orders list */
+body:has(#orderList) .container{width:min(980px,100%)}
+body:has(#orderList) .filter-bar{gap:9px;scrollbar-width:thin;padding:4px 1px 12px}
+body:has(#orderList) .filter-chip{min-height:39px;display:inline-flex;align-items:center;border-radius:999px;transition:background .18s,border-color .18s}
+body:has(#orderList) .filter-chip.active{background:#dff3ff;border-color:#85c7ec;color:#216c9c}
+body:has(#orderList) .order-list{gap:14px}
+body:has(#orderList) .order-card{border-radius:21px;border:1px solid var(--r11-line);box-shadow:var(--r11-shadow);min-height:118px}
+body:has(#orderList) .order-card:focus-visible{outline:3px solid #7cc6f2;outline-offset:3px}
+body:has(#orderList) .order-image{border-radius:15px}
+body:has(#orderList) .order-id{color:#326b8d;overflow-wrap:anywhere}
+body:has(#orderList) .order-total{color:#287aa9;font-size:16px}
+/* Order detail and tracking */
+body:has(#orderBox) .container{width:min(1080px,100%)}
+body:has(#orderBox) .card{border-radius:21px;border:1px solid var(--r11-line);box-shadow:var(--r11-shadow)}
+body:has(#orderBox) .summary{background:linear-gradient(135deg,#f9fdff,#eaf6ff)}
+body:has(#orderBox) .summary h2{overflow-wrap:anywhere}
+body:has(#orderBox) .meta div{border-radius:14px}
+body:has(#orderBox) .timeline-step{grid-template-columns:30px minmax(0,1fr);min-height:62px}
+body:has(#orderBox) .timeline-line{line-height:1.65}
+body:has(#orderBox) .item{gap:14px}
+body:has(#orderBox) .item :is(img,.ph){border-radius:14px}
+body:has(#orderBox) .action{min-height:48px;transition:filter .2s,transform .2s}
+body:has(#orderBox) .action:hover{filter:brightness(.97)}
+/* Lookup */
+body:has(#lookupFilters) main{max-width:960px}
+body:has(#lookupFilters) :is(.card,.order){border-radius:21px;border:1px solid var(--r11-line);box-shadow:var(--r11-shadow)}
+body:has(#lookupFilters) .search input{min-height:48px;border-radius:14px}
+body:has(#lookupFilters) .search button{border-radius:14px;min-height:48px}
+body:has(#lookupFilters) .lookup-filters{display:flex;gap:8px;overflow-x:auto;padding-block:12px 6px;scrollbar-width:thin}
+body:has(#lookupFilters) .lookup-filters button{flex-shrink:0;border-radius:999px}
+body:has(#lookupFilters) .lookup-detail-button{border-radius:13px;min-height:44px}
+body:has(#lookupFilters) .lookup-order-detail{border-radius:16px}
+/* Shared states and badges */
+body:has(#orderList) .state,body:has(#orderBox) .state,body:has(#lookupFilters) .state{border-radius:22px}
+body:has(#orderList) .badge,body:has(#orderBox) .badge,body:has(#lookupFilters) .badge{border-radius:999px;line-height:1.5}
+@media(max-width:640px){
+ .account-container{padding-inline:12px}
+ .account-container .order-summary-grid{gap:5px}
+ body:has(#orderList) .container,body:has(#orderBox) .container{padding-inline:12px;padding-bottom:95px}
+ body:has(#orderList) .order-card{border-radius:18px;padding:12px;min-height:105px}
+ body:has(#orderList) .order-total{font-size:14px}
+ body:has(#orderBox) .card{padding:15px;border-radius:18px}
+ body:has(#orderBox) .item{gap:10px}
+ body:has(#lookupFilters) main{padding-inline:12px;padding-bottom:95px}
+ body:has(#lookupFilters) :is(.card,.order){padding:15px;border-radius:18px}
+}
+/* Dark mode: maintain contrast without changing theme engine */
+html[data-theme="dark"]{--r11-line:#33485a;--r11-shadow:0 12px 30px rgba(0,0,0,.15)}
+html[data-theme="dark"] .account-container .order-summary-icon{background:#223c50;color:#a1dfff}
+html[data-theme="dark"] .account-container .order-summary-all{color:#a1dfff}
+html[data-theme="dark"] body:has(#orderList) .filter-chip.active{background:#23445a;border-color:#4b83a2;color:#bce8ff}
+html[data-theme="dark"] body:has(#orderList) .order-id{color:#bce8ff}
+html[data-theme="dark"] body:has(#orderList) .order-total{color:#a1dfff}
+html[data-theme="dark"] body:has(#orderBox) .summary{background:linear-gradient(135deg,#213648,#1c3042)}
+@media(prefers-reduced-motion:reduce){.account-container .order-summary-card,body:has(#orderList) .order-card,body:has(#orderBox) .action{transition:none}}
