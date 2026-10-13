@@ -54,3 +54,26 @@ body:has(#rinka-v2-bottom-nav.is-visible) .rk-theme-control{bottom:calc(104px + 
 /* On product pages the purchase bar takes precedence over navigation. */
 body.rinka-v2-purchase-visible #rinka-v2-bottom-nav{transform:translate(-50%,130%)!important;opacity:0!important;pointer-events:none!important}
 @media(max-width:650px){body:has(#rinka-v2-bottom-nav.is-visible) .rk-theme-control{bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}}
+
+/* Phase 8 follow-up: visible hero primary action in light mode. */
+html[data-theme="light"] body:has(.r8-header) .hero-banner .rinka-hero-primary,
+html:not([data-theme="dark"]) body:has(.r8-header) .hero-banner .rinka-hero-primary{
+  background:#5a9fdd!important;color:#fff!important;
+  border:1px solid #5a9fdd!important;
+  text-decoration:none!important;
+  box-shadow:0 5px 13px rgba(60,126,187,.18)!important;
+}
+/* Theme control must sit ABOVE the bottom nav, including on mobile. */
+body .rk-theme-control{z-index:9100!important;transition:bottom .22s ease!important}
+body:has(#rinka-v2-bottom-nav.is-visible):not(.rinka-v2-purchase-visible) .rk-theme-control{
+  bottom:calc(112px + env(safe-area-inset-bottom,0px))!important;
+}
+body:not(:has(#rinka-v2-bottom-nav.is-visible)) .rk-theme-control,
+body.rinka-v2-purchase-visible .rk-theme-control{
+  bottom:max(16px,env(safe-area-inset-bottom,0px))!important;
+}
+@media(max-width:650px){
+ body:has(#rinka-v2-bottom-nav.is-visible):not(.rinka-v2-purchase-visible) .rk-theme-control{
+  bottom:calc(112px + env(safe-area-inset-bottom,0px))!important;
+ }
+}
