@@ -555,6 +555,23 @@ button{
 .points-history-link{width:100%;min-height:44px;display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--rk-border, #dbe7f1);border-radius:999px;background:var(--rk-surface-3, #eef8ff);color:var(--rk-link, #347fb4);text-decoration:none;font-weight:700;font-size:13px;}
 .points-history-link:active{transform:scale(.985);}
 
+
+/* Phase 7 — compact, app-style order shortcuts */
+.order-summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.order-summary-heading h2{margin:0}
+.order-summary-all{color:#4a9bc9;text-decoration:none;font-size:13px;font-weight:700;white-space:nowrap}
+.order-summary-all:hover{text-decoration:underline}
+.order-summary-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.order-summary-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;min-width:0;min-height:96px;padding:12px 5px 9px;border:0;border-radius:15px;background:transparent;box-shadow:none;text-align:center;text-decoration:none;color:inherit;transition:background .16s ease,transform .16s ease}
+.order-summary-card:hover,.order-summary-card:focus-visible{background:rgba(125,207,255,.12);border:0;transform:translateY(-1px)}
+.order-summary-card:focus-visible{outline:2px solid #5baedc;outline-offset:2px}
+.order-summary-icon{position:relative;display:flex;align-items:center;justify-content:center;width:49px;height:49px;border-radius:17px;background:#ecf8ff;color:#5aa5d5;flex-shrink:0}
+.order-summary-badge{position:absolute;top:-5px;right:-9px;display:flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#ff7797;color:white;font-size:10px;font-weight:700;box-shadow:0 0 0 2px var(--account-card,#fff)}
+.order-summary-label{margin:0;font-size:11px;line-height:1.5;font-weight:600;color:var(--account-text,#334155);overflow-wrap:anywhere}
+@media(min-width:620px){.order-summary-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}.order-summary-card{min-height:110px;padding:15px 5px}}
+@media(max-width:600px){.order-summary-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.order-summary-card{min-height:96px;padding:10px 3px}.order-summary-label{font-size:10.5px}}
+@media(prefers-reduced-motion:reduce){.order-summary-card{transition:none}}
+
 </style>
 
 <link rel="stylesheet" href="theme.css?v=20260929-1">
@@ -726,9 +743,10 @@ class="profile-social hidden">
 
 <section class="account-section">
 
-<h2>
-คำสั่งซื้อของฉัน
-</h2>
+<div class="order-summary-heading">
+  <h2>คำสั่งซื้อของฉัน</h2>
+  <a class="order-summary-all" href="orders.html">ดูทั้งหมด <span aria-hidden="true">›</span></a>
+</div>
 
 <div
 id="orderSummaryGrid"
@@ -1869,28 +1887,7 @@ style="grid-column:1/-1;"
         counts.shipped
       ),
 
-      `
-
-<div
-class="order-summary-card"
-onclick="window.location.href='orders.html'"
->
-
-<div class="order-summary-icon">
-📚
-</div>
-
-<div class="order-summary-label">
-ออเดอร์ทั้งหมด
-</div>
-
-<div class="order-summary-count">
-${Number(total || 0)}
-</div>
-
-</div>
-
-`
+      // จำนวนออเดอร์รวมอยู่ที่ลิงก์ "ดูทั้งหมด" ด้านบน
 
     ].join("");
 
@@ -1945,41 +1942,29 @@ onclick="loadOrders()"
 
 }
 
-function createAccountOrderSummary(
-  status,
-  icon,
-  label,
-  count
-){
+function accountOrderIcon(status){
+  const paths = {
+    pending_order: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    pending: '<path d="m3 7 9-4 9 4v10l-9 4-9-4z"/><path d="m3 7 9 4 9-4M12 11v10"/>',
+    china_arrived: '<path d="M3 21V9l6 3V7l6 3V4h6v17z"/><path d="M7 16h2m3 0h2m3 0h2"/>',
+    shipping_to_th: '<path d="M3 7h11v11H3zM14 11h4l3 3v4h-7"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/>',
+    ready_to_ship: '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M8 13l3 3 5-5"/>',
+    shipped: '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>'
+  };
+  return '<svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (paths[status] || paths.pending) + '</svg>';
+}
 
-  const url =
-    "orders.html?status=" +
-    encodeURIComponent(
-      status
-    );
-
+function createAccountOrderSummary(status, icon, label, count){
+  const url = 'orders.html?status=' + encodeURIComponent(status);
+  const safeLabel = escapeAccountHtml(label);
+  const value = Number(count || 0);
   return `
-
-<div
-class="order-summary-card"
-onclick='window.location.href=${JSON.stringify(url)}'>
-
-  <div class="order-summary-icon">
-    ${icon}
-  </div>
-
-  <div class="order-summary-label">
-    ${escapeAccountHtml(label)}
-  </div>
-
-  <div class="order-summary-count">
-    ${Number(count || 0)}
-  </div>
-
-</div>
-
-`;
-
+<a class="order-summary-card" href="${url}" aria-label="${safeLabel} ${value} ออเดอร์">
+  <span class="order-summary-icon">${accountOrderIcon(status)}
+    ${value > 0 ? `<span class="order-summary-badge">${value > 99 ? '99+' : value}</span>` : ''}
+  </span>
+  <span class="order-summary-label">${safeLabel}</span>
+</a>`;
 }
 
 function logout(){
