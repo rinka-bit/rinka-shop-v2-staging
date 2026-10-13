@@ -58,15 +58,24 @@
   }
 
   function mount(){
-    if(document.getElementById("rinkaThemeButton")) return;
+  let button = document.getElementById("rinkaThemeButton");
+
+  if(!button){
     const wrap = document.createElement("div");
     wrap.className = "rk-theme-control";
     wrap.innerHTML =
       '<button id="rinkaThemeButton" class="rk-theme-button" type="button"></button>';
     document.body.appendChild(wrap);
-    document.getElementById("rinkaThemeButton").addEventListener("click",nextMode);
-    apply(readMode());
+    button = document.getElementById("rinkaThemeButton");
   }
+
+  if(!button.dataset.rinkaThemeBound){
+    button.addEventListener("click",nextMode);
+    button.dataset.rinkaThemeBound = "1";
+  }
+
+  apply(readMode());
+}
 
   const media = window.matchMedia
     ? window.matchMedia("(prefers-color-scheme: dark)")
