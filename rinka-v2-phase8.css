@@ -43,3 +43,14 @@ html[data-theme="dark"] .r8-header .r8-search input{background:#233c52;color:#f0
 html[data-theme="dark"] body:has(.r8-header) .hero-banner{background:linear-gradient(110deg,#213c53,#294c69)!important;border-color:#3d617c!important}
 html[data-theme="dark"] body:has(.r8-header) .hero-content h1,html[data-theme="dark"] body:has(.r8-header) .section-heading h2{color:#d3ebff!important}
 html[data-theme="dark"] body:has(.r8-browse) .browse-toolbar{background:#20384c;border-color:#3d5b73}
+
+/* Phase 8 fixes: readable hero text on light backgrounds. */
+html[data-theme="light"] body:has(.r8-header) .hero-banner .rinka-hero-eyebrow,
+html[data-theme="light"] body:has(.r8-header) .hero-banner .hero-content > p{color:#456c8b!important;opacity:1!important;text-shadow:none!important}
+html[data-theme="light"] body:has(.r8-header) .hero-banner .rinka-hero-primary{color:#fff!important;text-decoration:none!important}
+html[data-theme="light"] body:has(.r8-header) .hero-banner .rinka-hero-secondary{color:#386d99!important;text-decoration:none!important}
+/* The theme toggle must remain above the visible floating navigation. */
+body:has(#rinka-v2-bottom-nav.is-visible) .rk-theme-control{bottom:calc(104px + env(safe-area-inset-bottom,0px))!important;transition:bottom .2s ease}
+/* On product pages the purchase bar takes precedence over navigation. */
+body.rinka-v2-purchase-visible #rinka-v2-bottom-nav{transform:translate(-50%,130%)!important;opacity:0!important;pointer-events:none!important}
+@media(max-width:650px){body:has(#rinka-v2-bottom-nav.is-visible) .rk-theme-control{bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}}
