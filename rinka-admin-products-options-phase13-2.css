@@ -1,0 +1,28 @@
+/* Rinka Shop V2 — Phase 13.2: Product Manager + Product Options
+   Presentation only. Keep all existing CSS and JavaScript. */
+#tab_products,#tab_options{--p13-line:#dceaf5;--p13-muted:#607e95;--p13-soft:#f3faff}
+#productManager,#optionManager{min-width:0}
+#productManager .card,#optionManager .card{margin-bottom:16px;padding:clamp(15px,2vw,22px);border-radius:18px}
+#productManager .card h2,#optionManager .card h2{font-size:17px;line-height:1.5;margin-bottom:14px}
+#productManager .product-form,#optionManager .product-form{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:13px 16px;align-items:start}
+#productManager .product-form>div,#optionManager .product-form>div{min-width:0}
+#productManager label,#optionManager label{display:block;font-size:12px;font-weight:700;line-height:1.5;margin-bottom:6px}
+#productManager input:not([type=checkbox]):not([type=radio]),#productManager select,#productManager textarea,#optionManager input:not([type=checkbox]):not([type=radio]),#optionManager select,#optionManager textarea{box-sizing:border-box;width:100%;max-width:100%;min-width:0;border:1px solid #d8e7f2;background:#fff;border-radius:11px;padding:10px 12px;font-size:13px}
+#productManager input:focus-visible,#productManager select:focus-visible,#productManager textarea:focus-visible,#optionManager input:focus-visible,#optionManager select:focus-visible,#optionManager textarea:focus-visible{border-color:#6dc4f4;outline:2px solid #b8e5fc;outline-offset:1px}
+#productManager .grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,215px),1fr));gap:12px}
+#productManager .grid>.card{min-width:0;margin:0;padding:13px;border-radius:16px;overflow-wrap:anywhere}
+#productManager .grid>.card img{height:155px!important;object-fit:contain!important;background:#f4f8fc!important;border-radius:12px!important}
+#productManager .grid>.card h3{font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+#productManager .grid>.card p{font-size:12px;line-height:1.6;margin:6px 0;color:var(--p13-muted)}
+#productManager button,#optionManager button{max-width:100%;white-space:normal;line-height:1.45}
+#optionManager #optionProductInfo{border:1px solid var(--p13-line);border-radius:12px}
+#optionManager #optionBatchEditor{border-top:3px solid #9ddcff}
+#optionManager #optionBatchEmpty{border-radius:12px}
+#optionManager [style*="overflow-x:auto"],#productManager [style*="overflow-x:auto"]{max-width:100%}
+html[data-theme="dark"] #tab_products,html[data-theme="dark"] #tab_options{--p13-line:var(--rk-border);--p13-muted:var(--rk-muted);--p13-soft:var(--rk-surface-2)}
+html[data-theme="dark"] #productManager input:not([type=checkbox]):not([type=radio]),html[data-theme="dark"] #productManager select,html[data-theme="dark"] #productManager textarea,html[data-theme="dark"] #optionManager input:not([type=checkbox]):not([type=radio]),html[data-theme="dark"] #optionManager select,html[data-theme="dark"] #optionManager textarea{background:var(--rk-input)!important;color:var(--rk-text)!important;border-color:var(--rk-border)!important}
+html[data-theme="dark"] #productManager .grid>.card img{background:var(--rk-surface-2)!important}
+html[data-theme="dark"] #productManager .grid>.card p{color:var(--rk-muted)!important}
+html[data-theme="dark"] #optionManager #optionBatchEditor{border-top-color:#347ba5}
+@media(max-width:600px){#productManager .card,#optionManager .card{padding:14px;margin-bottom:12px}#productManager .product-form,#optionManager .product-form{grid-template-columns:minmax(0,1fr);gap:11px}#productManager .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#productManager .grid>.card{padding:10px}#productManager .grid>.card img{height:115px!important}#productManager .grid>.card h3{font-size:12px}#productManager .grid>.card p{font-size:11px}#productManager .grid>.card button{font-size:11px;padding:7px 8px}}
+@media(max-width:380px){#productManager .grid{grid-template-columns:minmax(0,1fr)}#productManager .grid>.card img{height:155px!important}}
