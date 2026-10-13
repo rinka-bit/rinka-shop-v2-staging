@@ -31,29 +31,18 @@ href="cart-drawer.css">
 <link rel="stylesheet" href="theme.css?v=20260918-2">
 <link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
 <link rel="stylesheet" href="rinka-v2-nav.css?v=3">
+<link rel="stylesheet" href="rinka-v2-phase8.css?v=1">
 </head>
 
 <body>
-<header class="page-header">
-  <button id="menuButton" class="icon-btn" type="button" aria-label="เปิดเมนู">☰</button>
-  <h1>Rinka Shop</h1>
-
-  <button
-type="button"
-class="cart-btn"
-onclick="openCartDrawer()"
-aria-label="เปิดตะกร้า">
-
-  🛒
-
-  <span
-  id="cartCount"
-  aria-live="polite">
-    0
-  </span>
-
-</button>
-  
+<header class="page-header r8-header">
+  <button id="menuButton" class="icon-btn r8-menu" type="button" aria-label="เปิดเมนู">☰</button>
+  <a class="r8-brand" href="home.html" aria-label="Rinka Shop หน้าแรก"><strong>Rinka Shop</strong><small>PREORDER &amp; GOODS</small></a>
+  <form class="r8-search" action="browse.html" method="get" role="search">
+    <input type="search" name="keyword" aria-label="ค้นหาสินค้า" placeholder="⌕ ค้นหาสินค้า..." autocomplete="off">
+    <button type="submit" aria-label="ค้นหา">⌕</button>
+  </form>
+  <button type="button" class="cart-btn r8-cart" onclick="openCartDrawer()" aria-label="เปิดตะกร้า">🛒 <span id="cartCount">0</span></button>
 </header>
 
 <div id="overlay" class="overlay hidden"></div>

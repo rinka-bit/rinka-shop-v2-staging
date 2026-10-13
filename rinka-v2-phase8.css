@@ -1,0 +1,45 @@
+/* Rinka Shop V2 - Phase 8 | Concept A. Presentation only. */
+:root{--r8-blue:#6caff0;--r8-ink:#294c70;--r8-line:#d9eaf7;--r8-surface:#fff}
+body:has(.r8-header){background:#f5faff}
+.r8-header{position:sticky!important;top:0!important;z-index:900!important;display:flex!important;align-items:center!important;gap:11px!important;min-height:65px!important;margin:0 -20px!important;padding:10px max(16px,calc((100vw - 1200px)/2))!important;background:rgba(255,255,255,.96)!important;border-bottom:1px solid var(--r8-line)!important;backdrop-filter:blur(14px)}
+.r8-header .r8-menu{display:grid!important;place-items:center!important;width:38px!important;height:38px!important;min-width:38px!important;border-radius:12px!important;background:#e7f4ff!important;color:#356d9c!important;border:0!important;font-size:21px!important;padding:0!important}
+.r8-brand{display:flex;flex-direction:column;justify-content:center;min-width:116px;flex:none;text-decoration:none!important;line-height:1.13}
+.r8-brand strong{color:#568fe2;font-size:17px;font-weight:700;letter-spacing:-.04em;white-space:nowrap}
+.r8-brand small{color:#8199b2;font-size:8px;letter-spacing:.19em;font-weight:700;white-space:nowrap;margin-top:3px}
+.r8-header .r8-search{display:flex;align-items:center;flex:1;min-width:0;max-width:620px;margin-left:auto;position:relative}
+.r8-header .r8-search input{width:100%;height:39px;border:1px solid #d5e8f6;background:#f5faff;color:#315674;border-radius:13px;padding:0 38px 0 13px;font:inherit;font-size:12px;outline:none;box-shadow:none}
+.r8-header .r8-search input:focus{border-color:#7cb8e8;box-shadow:0 0 0 3px rgba(107,178,233,.13)}
+.r8-header .r8-search button{position:absolute;right:4px;top:3px;width:33px;height:33px;border:0;background:transparent;color:#5989b6;display:grid;place-items:center;cursor:pointer}
+.r8-header .r8-cart{display:flex!important;align-items:center;justify-content:center;gap:4px;min-width:48px;height:39px!important;border-radius:12px!important;border:1px solid #d8eafa!important;background:#eaf5ff!important;color:#477da7!important;padding:0 9px!important;font-size:18px!important;box-shadow:none!important;position:relative}
+.r8-header .r8-cart #cartCount{position:static!important;transform:none!important;background:transparent!important;color:#426f9b!important;font-size:12px!important;min-width:0!important;width:auto!important;height:auto!important;border:0!important;box-shadow:none!important;padding:0!important}
+.r8-header .r8-cart #cartCount:before{content:''}
+/* Compact hero instead of the oversized title panel. */
+body:has(.r8-header) .hero-banner{max-width:1200px!important;min-height:190px!important;margin:20px auto 25px!important;border-radius:24px!important;background:linear-gradient(110deg,#e9f6ff,#dceeff)!important;border:1px solid #d0e8fa!important;box-shadow:none!important}
+body:has(.r8-header) .hero-banner:before,body:has(.r8-header) .hero-banner:after{display:none!important}
+body:has(.r8-header) .hero-content{padding:29px 33px!important;max-width:850px!important}
+body:has(.r8-header) .hero-content h1{font-size:clamp(21px,3vw,31px)!important;margin:7px 0 8px!important;color:#2f618b!important}
+body:has(.r8-header) .hero-content p{font-size:12px!important;line-height:1.7!important;margin:0!important}
+body:has(.r8-header) .rinka-hero-actions{margin-top:15px!important}
+body:has(.r8-header) .rinka-hero-actions a{border-radius:13px!important;padding:10px 17px!important}
+body:has(.r8-header) .section{margin-top:24px!important}
+body:has(.r8-header) .section-heading h2{color:#2d577f!important}
+/* Browse: simple storefront filter panel and airy product cards */
+body:has(.r8-browse) .browse-container{max-width:1200px;margin:0 auto}
+body:has(.r8-browse) .browse-heading{padding-top:8px}
+body:has(.r8-browse) .browse-toolbar{background:var(--r8-surface);border:1px solid var(--r8-line);border-radius:19px;padding:13px;box-shadow:0 5px 22px rgba(69,126,167,.05)}
+body:has(.r8-browse) .product-grid>*{border-radius:18px;overflow:hidden;border-color:var(--r8-line);box-shadow:0 4px 14px rgba(69,126,167,.05)}
+/* Product: keep gallery, pricing, variants, purchase controls and existing JS intact */
+body:has(.r8-product-marker) .product-page{max-width:1080px;padding-top:80px}
+body:has(.r8-product-marker) .product-gallery,body:has(.r8-product-marker) .product-info{border-radius:22px}
+body:has(.r8-product-marker) .product-topbar{top:12px;max-width:1100px;margin:auto}
+body:has(.r8-product-marker) .product-topbar button{box-shadow:0 4px 18px rgba(45,91,130,.09);border-color:#d9eaf7}
+@media(max-width:650px){.r8-header{gap:7px!important;padding:8px 12px!important;margin:0 -20px!important;min-height:60px!important}.r8-brand{min-width:96px}.r8-brand strong{font-size:14px}.r8-brand small{font-size:6px;letter-spacing:.12em}.r8-header .r8-menu{width:33px!important;min-width:33px!important;height:35px!important}.r8-header .r8-search input{height:35px;padding-left:9px;font-size:11px}.r8-header .r8-search button{top:1px}.r8-header .r8-cart{min-width:41px;height:35px!important;padding:0 6px!important}body:has(.r8-header) .hero-banner{margin:12px auto 20px!important;min-height:0!important;border-radius:21px!important}body:has(.r8-header) .hero-content{padding:24px 20px!important}body:has(.r8-header) .hero-content h1{font-size:21px!important}}
+@media(max-width:370px){.r8-brand{min-width:80px}.r8-brand strong{font-size:12px}.r8-header{gap:5px!important}.r8-header .r8-cart{min-width:36px;padding:0 4px!important}}
+html[data-theme="dark"] body:has(.r8-header){background:#142436}
+html[data-theme="dark"] .r8-header{background:rgba(22,40,57,.96)!important;border-color:#36536b!important}
+html[data-theme="dark"] .r8-header .r8-menu,html[data-theme="dark"] .r8-header .r8-cart{background:#29475f!important;border-color:#43617a!important;color:#d5edff!important}
+html[data-theme="dark"] .r8-header .r8-cart #cartCount,html[data-theme="dark"] .r8-brand strong{color:#b6dcff!important}
+html[data-theme="dark"] .r8-header .r8-search input{background:#233c52;color:#f0f8ff;border-color:#416079}
+html[data-theme="dark"] body:has(.r8-header) .hero-banner{background:linear-gradient(110deg,#213c53,#294c69)!important;border-color:#3d617c!important}
+html[data-theme="dark"] body:has(.r8-header) .hero-content h1,html[data-theme="dark"] body:has(.r8-header) .section-heading h2{color:#d3ebff!important}
+html[data-theme="dark"] body:has(.r8-browse) .browse-toolbar{background:#20384c;border-color:#3d5b73}
