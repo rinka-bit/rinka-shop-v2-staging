@@ -739,10 +739,26 @@ button:disabled{
 
 }
 
+
+/* V2 order processing: stage indicator, not a fabricated server percentage */
+.rinka-order-progress{margin-top:18px;text-align:left;font-size:13px;color:#52718c}
+.rinka-order-progress-track{height:8px;border-radius:99px;overflow:hidden;background:#e6f2fc}
+#rinkaOrderProgressFill{width:18%;height:100%;background:#80b9e8;border-radius:99px;transition:width .35s ease}
+.rinka-order-progress-title{font-weight:700;color:#3b719f;margin:12px 0 9px;text-align:center}
+.rinka-order-progress-steps{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+.rinka-order-progress-steps li{display:flex;align-items:center;gap:9px;opacity:.52}
+.rinka-order-progress-steps li:before{content:'○';width:18px;text-align:center;color:#8baac2}
+.rinka-order-progress-steps li.is-current{opacity:1;color:#327cb9;font-weight:700}
+.rinka-order-progress-steps li.is-current:before{content:'◉';color:#5aabe6}
+.rinka-order-progress-steps li.is-done{opacity:1;color:#417d69}
+.rinka-order-progress-steps li.is-done:before{content:'✓';color:#39a079}
+.rinka-order-progress-hint{font-size:11px;line-height:1.5;color:#7d95a8;margin:13px 0 0;text-align:center}
+
 </style>
 
 <link rel="stylesheet" href="theme.css?v=20260919-1">
 <link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
+<link rel="stylesheet" href="rinka-v2-nav.css?v=3">
 </head>
 
 <body>
@@ -943,6 +959,16 @@ class="loading-overlay">
 <p>
 กรุณาอย่าปิดหน้านี้จนกว่าจะดำเนินการเสร็จ
 </p>
+<div class="rinka-order-progress" role="status" aria-live="polite" aria-atomic="true">
+  <div class="rinka-order-progress-track"><div id="rinkaOrderProgressFill"></div></div>
+  <p id="rinkaOrderProgressTitle" class="rinka-order-progress-title">กำลังเตรียมข้อมูลออเดอร์</p>
+  <ol class="rinka-order-progress-steps">
+    <li id="rinkaOrderStepPrepare" class="is-current">เตรียมข้อมูลและสลิป</li>
+    <li id="rinkaOrderStepSend">ส่งข้อมูลไปยังระบบ</li>
+    <li id="rinkaOrderStepConfirm">ตรวจสอบผลการบันทึก</li>
+  </ol>
+  <p class="rinka-order-progress-hint">แถบนี้แสดงขั้นตอนที่ตรวจสอบได้ ไม่ใช่เปอร์เซ็นต์การทำงานของเซิร์ฟเวอร์</p>
+</div>
 
 </div>
 
@@ -1520,6 +1546,25 @@ function openPaymentQR(
 
 }
 
+
+// Progress stages correspond to actual frontend milestones, not server percentages.
+function setRinkaOrderStage(stage){
+  const stages=['Prepare','Send','Confirm'];
+  const labels={Prepare:'กำลังเตรียมข้อมูลและสลิป',Send:'กำลังส่งออเดอร์เข้าระบบ',Confirm:'ได้รับผลตอบกลับแล้ว กำลังตรวจสอบออเดอร์'};
+  const index=stages.indexOf(stage);
+  if(index<0)return;
+  const title=document.getElementById('rinkaOrderProgressTitle');
+  const fill=document.getElementById('rinkaOrderProgressFill');
+  if(title)title.textContent=labels[stage];
+  if(fill)fill.style.width=['18%','48%','80%'][index];
+  stages.forEach((name,i)=>{
+    const item=document.getElementById('rinkaOrderStep'+name);
+    if(!item)return;
+    item.classList.toggle('is-done',i<index);
+    item.classList.toggle('is-current',i===index);
+  });
+}
+
 async function submitOrder(){
 
   // Prevent concurrent submissions (including programmatic/double clicks).
@@ -1659,6 +1704,7 @@ async function submitOrder(){
 
     loadingOverlay.style.display =
       "flex";
+    setRinkaOrderStage('Prepare');
 
   }
 
@@ -2009,6 +2055,8 @@ ONE TRANSACTION REQUEST
 Create Order + Payment
 =========================================
 */
+
+setRinkaOrderStage('Send');
 
 const transactionForm =
   new FormData();
@@ -2836,6 +2884,8 @@ if(
 
 }
 
+
+setRinkaOrderStage('Confirm');
 
 /*
 =========================================
@@ -4354,6 +4404,7 @@ function goPaymentBack(){
 <script src="ui.js"></script>
   
 <script src="theme.js?v=20260919-1"></script>
+<script src="rinka-v2-nav.js?v=3"></script>
 </body>
 
 </html>

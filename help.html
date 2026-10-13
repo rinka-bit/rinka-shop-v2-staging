@@ -16,6 +16,7 @@
 @media(max-width:600px){.help-page{padding:14px 10px 36px}.help-hero{padding:18px}.help-toolbar{top:70px}.faq button{padding:14px}.faq-tag{display:block;width:max-content;margin:0 0 7px}}
 </style>
 <link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
+<link rel="stylesheet" href="rinka-v2-nav.css?v=3">
 </head>
 <body>
 <header class="rk-page-header"><button id="menuButton" class="rk-icon-button" type="button" aria-label="เปิดเมนู">☰</button><h1>ศูนย์ช่วยเหลือ</h1><a href="home.html" class="rk-icon-link" aria-label="หน้าแรก">🏠</a></header>
@@ -40,4 +41,5 @@
 <script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("helpSearch").addEventListener("input",filterFaq)});function toggleFaq(button){button.closest(".faq").classList.toggle("open")}function filterFaq(){const q=document.getElementById("helpSearch").value.trim().toLowerCase();let shown=0;document.querySelectorAll(".faq").forEach(item=>{const text=(item.textContent+" "+item.dataset.search).toLowerCase();const show=!q||text.includes(q);item.classList.toggle("hidden",!show);if(show)shown++});document.getElementById("helpEmpty").classList.toggle("hidden",shown>0)}</script>
 <script src="menu.js"></script>
 <script src="theme.js?v=20260919-1"></script>
+<script src="rinka-v2-nav.js?v=3"></script>
 </body></html>

@@ -1,0 +1,8 @@
+/* Concept A — admin visual refinement, additive */
+:root{--admin-v2-bg:#f5faff;--admin-v2-border:#dcebf7;--admin-v2-ink:#354b62}
+body{background:var(--admin-v2-bg);color:var(--admin-v2-ink);font-family:Kodchasan,system-ui,sans-serif}
+button{transition:filter .15s ease,transform .15s ease}
+button:hover:not(:disabled){filter:brightness(.97)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #a7d5f7;outline-offset:2px}
+input,select,textarea{border-color:var(--admin-v2-border);background:#fff}
+@media(max-width:760px){input,select,textarea{font-size:16px}}

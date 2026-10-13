@@ -1,0 +1,14 @@
+/* Rinka V2 Concept A — additive staging navigation */
+:root{--rinka-v2-blue:#83bce8;--rinka-v2-pale:#eaf5ff}
+#rinka-v2-bottom-nav{position:fixed;z-index:8999;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translate(-50%,130%);opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:space-around;gap:4px;width:min(420px,calc(100% - 28px));padding:9px 12px;border-radius:24px;background:rgba(255,255,255,.97);border:1px solid #d6e9fa;box-shadow:0 8px 28px rgba(51,106,158,.16);transition:transform .25s ease,opacity .25s ease;font-family:Kodchasan,sans-serif}
+#rinka-v2-bottom-nav.is-visible{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+#rinka-v2-bottom-nav button,#rinka-v2-bottom-nav a{border:0;background:transparent;color:#54718a;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:56px;padding:6px 4px;font:600 11px Kodchasan,sans-serif;cursor:pointer}
+#rinka-v2-bottom-nav .nav-ico{font-size:20px;line-height:1.2}
+#rinka-v2-bottom-nav .is-active{color:#3788c9}
+html[data-theme=dark] #rinka-v2-bottom-nav{background:rgba(27,42,61,.97);border-color:#3b526b}
+html[data-theme=dark] #rinka-v2-bottom-nav button,html[data-theme=dark] #rinka-v2-bottom-nav a{color:#d5e8fb}
+@media(prefers-reduced-motion:reduce){#rinka-v2-bottom-nav{transition:none}}
+/* Phase 6: focus visibility and improved SVG icons */
+#rinka-v2-bottom-nav .nav-ico{width:21px;height:21px;flex:none}
+#rinka-v2-bottom-nav a:focus-visible,#rinka-v2-bottom-nav button:focus-visible{outline:2px solid #3788c9;outline-offset:2px;border-radius:10px}
+@media(max-width:360px){#rinka-v2-bottom-nav{padding:7px 5px}#rinka-v2-bottom-nav button,#rinka-v2-bottom-nav a{min-width:0;flex:1}}

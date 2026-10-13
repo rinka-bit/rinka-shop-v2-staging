@@ -17,6 +17,7 @@
 @media(min-width:720px){.product-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}}@media(max-width:600px){.fandom-page{padding:14px 10px 36px}.fandom-toolbar{align-items:stretch;flex-direction:column}.fandom-count{padding-left:3px}}
 </style>
 <link rel="stylesheet" href="rinka-blue.css?v=20261012-2">
+<link rel="stylesheet" href="rinka-v2-nav.css?v=3">
 </head>
 <body>
 <header class="rk-page-header"><button class="rk-icon-button" type="button" onclick="goBack()">←</button><h1 id="topTitle">Fandom</h1><a href="cart.html" class="rk-cart-link">🛒<span id="cartCount">0</span></a></header>
@@ -137,5 +138,6 @@ function updateCartCount(){const cart=safeStorageArray("cart");const n=cart.redu
 <script src="catalog.js?v=20260819-1"></script>
 <script src="theme.js?v=20260929-1"></script>
   
+<script src="rinka-v2-nav.js?v=3"></script>
 </body>
 </html>
