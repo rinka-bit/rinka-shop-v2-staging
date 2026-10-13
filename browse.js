@@ -42,8 +42,15 @@ async function initBrowse(){
 
   try{
 
-    const catalog =
-      await RinkaCatalog.load();
+    // A stalled catalog fetch should not leave the loading spinner forever.
+    // This timeout only changes the UI; it does not change pricing or order data.
+    const catalog = await Promise.race([
+      RinkaCatalog.load(),
+      new Promise((_, reject) => setTimeout(
+        () => reject(new Error("โหลด Catalog เกิน 15 วินาที กรุณาตรวจ data/catalog.json และ Network")),
+        15000
+      ))
+    ]);
 
 
     browseProducts =
@@ -94,7 +101,10 @@ async function initBrowse(){
 
 
     setBrowseStatus(
-      "โหลดสินค้าไม่สำเร็จ กรุณาลองใหม่ " +
+      "โหลดสินค้าไม่สำเร็จ: " +
+      String(error && error.message || "ไม่ทราบสาเหตุ")
+        .replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])) +
+      " กรุณาลองใหม่ " +
       `<button
       type="button"
       class="secondary-btn"
