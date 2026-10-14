@@ -1,0 +1,29 @@
+/* Rinka Shop V2 — Phase 13.5: Address, Manual Order, Legacy, Customer Lookup.
+   Presentation-only. No behavior or data modifications. */
+#tab_address,#tab_manual_order,#tab_legacy_orders,#tab_customer_lookup{min-width:0;--p135-border:#dce9f3;--p135-muted:#64748b}
+#tab_address .section-title,#tab_manual_order .section-title,#tab_legacy_orders .section-title{font-size:clamp(19px,2vw,24px);margin:0 0 16px;letter-spacing:-.02em}
+#addressRequests,#manualOrderManager,#legacyOrderManager,#adminCustomerOrderLookup{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#addressRequests .card,#manualOrderManager .card,#legacyOrderManager .card,#adminCustomerOrderLookup .card{padding:clamp(13px,1.6vw,19px);border-radius:16px;margin-bottom:13px;border:1px solid var(--p135-border);box-shadow:0 2px 10px rgba(35,87,133,.04)}
+#addressRequests .warning-card{border-radius:12px;padding:13px 15px;margin-bottom:12px;line-height:1.6}
+#addressRequests button,#manualOrderManager button,#legacyOrderManager button,#adminCustomerOrderLookup button{min-height:35px;width:auto;max-width:100%;padding:8px 12px;font-size:12px;line-height:1.45;border-radius:10px}
+#addressRequests input,#addressRequests select,#addressRequests textarea,#manualOrderManager input,#manualOrderManager select,#manualOrderManager textarea,#legacyOrderManager input,#legacyOrderManager select,#legacyOrderManager textarea,#adminCustomerOrderLookup input,#adminCustomerOrderLookup select,#adminCustomerOrderLookup textarea{box-sizing:border-box;min-width:0;max-width:100%;font-size:13px;padding:9px 11px;border-radius:10px}
+#manualOrderManager label,#legacyOrderManager label,#adminCustomerOrderLookup label{font-size:13px;line-height:1.5}
+#manualOrderManager h2,#legacyOrderManager h2,#adminCustomerOrderLookup h2{font-size:17px;line-height:1.45}
+#manualOrderManager h3,#legacyOrderManager h3,#adminCustomerOrderLookup h3{font-size:15px;line-height:1.45}
+#manualOrderManager img,#legacyOrderManager img,#adminCustomerOrderLookup img{max-width:100%;object-fit:contain}
+/* Legacy: existing JS creates these classes. Keep all existing event handlers intact. */
+#legacyOrderManager .legacy-card,#legacyOrderManager .legacy-item,#legacyOrderManager .legacy-customer-result,#legacyOrderManager .legacy-selected-customer{border-radius:13px;max-width:100%;min-width:0}
+#legacyOrderManager .legacy-grid,#legacyOrderManager .legacy-layout{min-width:0;max-width:100%}
+#legacyOrderManager .legacy-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#legacyOrderManager .legacy-label{font-size:12px;line-height:1.5}
+#legacyOrderManager .legacy-image-preview{max-width:100%}
+#legacyOrderManager .legacy-summary-row{gap:10px;line-height:1.6}
+#legacyOrderManager .legacy-summary-total{font-weight:700}
+/* Long order IDs and customer handles should wrap rather than widen the page. */
+#adminCustomerOrderLookup .card,#addressRequests .warning-card{overflow-wrap:anywhere}
+#tab_address button:focus-visible,#tab_manual_order button:focus-visible,#tab_legacy_orders button:focus-visible,#tab_customer_lookup button:focus-visible{outline:3px solid #8ad5ff;outline-offset:2px}
+/* Dark mode: inherit theme palette without changing theme switching logic. */
+html[data-theme="dark"] #tab_address,html[data-theme="dark"] #tab_manual_order,html[data-theme="dark"] #tab_legacy_orders,html[data-theme="dark"] #tab_customer_lookup{--p135-border:var(--rk-border,#35475b);--p135-muted:var(--rk-muted,#aabbd0)}
+html[data-theme="dark"] #addressRequests .card,html[data-theme="dark"] #manualOrderManager .card,html[data-theme="dark"] #legacyOrderManager .card,html[data-theme="dark"] #adminCustomerOrderLookup .card{background:var(--rk-surface,#1b2939)!important;color:var(--rk-text,#e6edf5)!important;border-color:var(--p135-border)!important}
+html[data-theme="dark"] #addressRequests input,html[data-theme="dark"] #addressRequests select,html[data-theme="dark"] #addressRequests textarea,html[data-theme="dark"] #manualOrderManager input,html[data-theme="dark"] #manualOrderManager select,html[data-theme="dark"] #manualOrderManager textarea,html[data-theme="dark"] #legacyOrderManager input,html[data-theme="dark"] #legacyOrderManager select,html[data-theme="dark"] #legacyOrderManager textarea,html[data-theme="dark"] #adminCustomerOrderLookup input,html[data-theme="dark"] #adminCustomerOrderLookup select,html[data-theme="dark"] #adminCustomerOrderLookup textarea{background:var(--rk-input,#25364a)!important;color:var(--rk-text,#e6edf5)!important;border-color:var(--p135-border)!important}
+@media(max-width:680px){#addressRequests .card,#manualOrderManager .card,#legacyOrderManager .card,#adminCustomerOrderLookup .card{padding:12px}#addressRequests button,#manualOrderManager button,#legacyOrderManager button,#adminCustomerOrderLookup button{font-size:11px;padding:8px 10px}#legacyOrderManager .legacy-actions{gap:6px}}
